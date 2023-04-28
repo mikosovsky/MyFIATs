@@ -7,4 +7,17 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="textEditBackgroundColor">#007AFF</color>
+    <color name="logoColor">#007AFF</color>
+    <color name="chosenChartColor">#007AFF</color>
+    <color name="registerButtonBackgroundColor">#32ADE6</color>
+    <color name="goBackButtonBackgroundColor">#32ADE6</color>
+    <color name="loginButtonBackgroundColor">#34C759</color>
+    <color name="createAccountButtonBackgroundColor">#34C759</color>
+    <color name="loggedLayoutSecondColor">#F2F2F7</color>
+    <color name="currencyLayoutSecondColor">#D1D1D6</color>
+    <color name="goDownColor">#FF3B30</color>
+    <color name="goUpColor">#34C759</color>
+    <color name="blackTintColor">#000000</color>
+    <color name="whiteTintColor">#FFFFFF</color>
 </resources>
