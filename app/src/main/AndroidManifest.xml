@@ -15,7 +15,7 @@
                 android:name=".CurrencyLayoutActivity"
                 android:exported="false"/>
         <activity
-                android:name=".LogedLayoutActivity"
+                android:name=".LoggedLayoutActivity"
                 android:exported="false"/>
         <activity
                 android:name=".RegisterLayoutActivity"
