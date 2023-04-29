@@ -33,7 +33,7 @@
                 android:ems="10"
                 android:id="@+id/emailEditText"
                 android:background="@drawable/rounded_corner_view"
-                android:hint="E-mail" android:textColorHint="@color/hintColor"
+                android:hint="E-mail" android:textColorHint="@color/hintColor" android:textColor="@color/whiteTintColor"
         />
         <Space
                 android:layout_width="match_parent" android:layout_height="20dp"
@@ -47,7 +47,7 @@
                 android:ems="10"
                 android:id="@+id/passwordEditText"
                 android:background="@drawable/rounded_corner_view"
-                android:hint="Password" android:textColorHint="@color/hintColor"
+                android:hint="Password" android:textColorHint="@color/hintColor" android:textColor="@color/whiteTintColor"
         />
         <Space android:layout_width="match_parent" android:layout_height="30dp"
         />
