@@ -6,13 +6,74 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".LoginLayoutActivity">
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="80dp"
+            android:layout_marginStart="50dp" android:layout_marginEnd="50dp">
+        <TextView
+                android:text="LOGO"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/logoTextView"
+                android:textAlignment="center" android:textSize="30sp"
+                android:textColor="@color/textEditBackgroundColor"
+                android:textStyle="bold"/>
+        <Space
+                android:layout_width="match_parent" android:layout_height="150dp"
+        />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:inputType="textEmailAddress"
+                android:ems="10"
+                android:id="@+id/emailEditText"
+                android:background="@drawable/rounded_corner_view"
+                android:hint="E-mail" android:textColorHint="@color/hintColor"
+        />
+        <Space
+                android:layout_width="match_parent" android:layout_height="20dp"
+        />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:id="@+id/passwordEditText"
+                android:background="@drawable/rounded_corner_view"
+                android:hint="Password" android:textColorHint="@color/hintColor"
+        />
+        <Space android:layout_width="match_parent" android:layout_height="30dp"
+        />
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:weightSum="11">
+            <Button
+                    android:text="Register"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp" android:id="@+id/registerButton"
+                    android:layout_weight="4" android:background="@drawable/rounded_corner_view" app:backgroundTint="@color/registerButtonBackgroundColor"
+                    android:textSize="12sp" android:paddingTop="2dp"
+                    android:textAllCaps="false"
+            />
+            <Space android:layout_width="40dp" android:layout_height="0dp" android:layout_weight="3"/>
+            <Button
+                    android:text="Login"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp" android:id="@+id/loginButton"
+                    android:background="@drawable/rounded_corner_view"
+                    app:backgroundTint="@color/loginButtonBackgroundColor"
+                    android:layout_weight="4" android:paddingTop="2dp"
+                    android:textAllCaps="false" android:maxLines="1"
+                    android:textSize="12sp"/>
+        </LinearLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

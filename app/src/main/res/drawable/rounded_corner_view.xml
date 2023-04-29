@@ -9,6 +9,6 @@ android:shape="rectangle">
 <stroke android:width="2dp" android:color="@color/textEditBackgroundColor" />
 
 <!--- This is the background color -->
-<solid android:color="@color/textEditBackgroundColor" />
+<solid android:color="@color/textEditBackgroundColor"></solid>
 
 </shape>
