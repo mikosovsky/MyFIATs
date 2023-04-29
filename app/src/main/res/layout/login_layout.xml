@@ -59,21 +59,22 @@
             <Button
                     android:text="Register"
                     android:layout_width="0dp"
-                    android:layout_height="40dp" android:id="@+id/registerButton"
-                    android:layout_weight="4" android:background="@drawable/rounded_corner_view" app:backgroundTint="@color/registerButtonBackgroundColor"
-                    android:textSize="12sp" android:paddingTop="2dp"
+                    android:layout_height="match_parent" android:id="@+id/registerButton"
+                    android:layout_weight="4" android:background="@drawable/rounded_corner_view"
+                    app:backgroundTint="@color/registerButtonBackgroundColor"
+                    android:textSize="14sp" android:paddingTop="2dp"
                     android:textAllCaps="false"
             />
             <Space android:layout_width="40dp" android:layout_height="0dp" android:layout_weight="3"/>
             <Button
                     android:text="Login"
                     android:layout_width="0dp"
-                    android:layout_height="40dp" android:id="@+id/loginButton"
+                    android:layout_height="match_parent" android:id="@+id/loginButton"
                     android:background="@drawable/rounded_corner_view"
                     app:backgroundTint="@color/loginButtonBackgroundColor"
                     android:layout_weight="4" android:paddingTop="2dp"
                     android:textAllCaps="false" android:maxLines="1"
-                    android:textSize="12sp"/>
+                    android:textSize="14sp"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
