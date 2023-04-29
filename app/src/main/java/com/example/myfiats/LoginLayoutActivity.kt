@@ -34,7 +34,7 @@ class LoginLayoutActivity : AppCompatActivity() {
             startActivity(registerLayoutActivityIntent)
         }
     }
-
+    // Function to set up all views in login_layout.xml
     private fun setUpViews(){
         registerLayoutActivityIntent = Intent(this@LoginLayoutActivity, RegisterLayoutActivity::class.java)
         loggedLayoutActivityIntent = Intent(this@LoginLayoutActivity, LoggedLayoutActivity::class.java)
