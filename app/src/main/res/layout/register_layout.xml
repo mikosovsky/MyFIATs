@@ -50,6 +50,7 @@
                     android:ems="10"
                     android:id="@+id/nameEditText"
                     android:layout_weight="5"
+                    android:textColor="@color/whiteTintColor"
             />
             <Space
                     android:layout_width="0dp"
@@ -68,6 +69,7 @@
                     android:ems="10"
                     android:id="@+id/surnameEditText"
                     android:layout_weight="5"
+                    android:textColor="@color/whiteTintColor"
             />
         </LinearLayout>
         <Space
@@ -92,6 +94,7 @@
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
                     android:layout_weight="5"
+                    android:textColor="@color/whiteTintColor"
             />
             <Space
                     android:layout_width="0dp"
@@ -114,6 +117,7 @@
                 android:background="@drawable/rounded_corner_view"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
+                android:textColor="@color/whiteTintColor"
         />
         <Space
                 android:layout_width="match_parent"
@@ -130,6 +134,7 @@
                 android:background="@drawable/rounded_corner_view"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
+                android:textColor="@color/whiteTintColor"
         />
         <Space
                 android:layout_width="match_parent"
@@ -146,6 +151,7 @@
                 android:background="@drawable/rounded_corner_view"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
+                android:textColor="@color/whiteTintColor"
         />
         <Space
                 android:layout_width="match_parent"

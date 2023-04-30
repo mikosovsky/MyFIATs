@@ -23,13 +23,13 @@ class LoginLayoutActivity : AppCompatActivity() {
         setContentView(R.layout.login_layout)
         setUp()
     }
-    // Set up function (Here are all declarations
+    // Set up function (Here are all declarations)
     private fun setUp() {
         supportActionBar?.hide()
         setUpViews()
         registerButtonOnClick()
     }
-    // Functionality for registerButton
+    // Functionality for registerButton (Go to register_layout.xml)
     private fun registerButtonOnClick() {
         registerButton.setOnClickListener {
             startActivity(registerLayoutActivityIntent)
