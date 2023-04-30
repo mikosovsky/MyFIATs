@@ -25,6 +25,7 @@ class LoginLayoutActivity : AppCompatActivity() {
     }
     // Set up function (Here are all declarations
     private fun setUp() {
+        supportActionBar?.hide()
         setUpViews()
         registerButtonOnClick()
     }

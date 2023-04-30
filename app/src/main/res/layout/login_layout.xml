@@ -22,7 +22,7 @@
                 android:textColor="@color/textEditBackgroundColor"
                 android:textStyle="bold"/>
         <Space
-                android:layout_width="match_parent" android:layout_height="150dp"
+                android:layout_width="match_parent" android:layout_height="100dp"
         />
         <EditText
                 android:layout_width="match_parent"
