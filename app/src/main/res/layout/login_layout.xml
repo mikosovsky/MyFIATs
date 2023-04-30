@@ -10,19 +10,25 @@
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="80dp"
-            android:layout_marginStart="50dp" android:layout_marginEnd="50dp">
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="80dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp">
         <TextView
                 android:text="LOGO"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/logoTextView"
-                android:textAlignment="center" android:textSize="30sp"
+                android:layout_height="wrap_content"
+                android:id="@+id/logoTextView"
+                android:textAlignment="center"
+                android:textSize="30sp"
                 android:textColor="@color/textEditBackgroundColor"
                 android:textStyle="bold"/>
         <Space
-                android:layout_width="match_parent" android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
         />
         <EditText
                 android:layout_width="match_parent"
@@ -33,10 +39,13 @@
                 android:ems="10"
                 android:id="@+id/emailEditText"
                 android:background="@drawable/rounded_corner_view"
-                android:hint="E-mail" android:textColorHint="@color/hintColor" android:textColor="@color/whiteTintColor"
+                android:hint="E-mail"
+                android:textColorHint="@color/hintColor"
+                android:textColor="@color/whiteTintColor"
         />
         <Space
-                android:layout_width="match_parent" android:layout_height="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
         />
         <EditText
                 android:layout_width="match_parent"
@@ -47,9 +56,13 @@
                 android:ems="10"
                 android:id="@+id/passwordEditText"
                 android:background="@drawable/rounded_corner_view"
-                android:hint="Password" android:textColorHint="@color/hintColor" android:textColor="@color/whiteTintColor"
+                android:hint="Password"
+                android:textColorHint="@color/hintColor"
+                android:textColor="@color/whiteTintColor"
         />
-        <Space android:layout_width="match_parent" android:layout_height="30dp"
+        <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
         />
         <LinearLayout
                 android:orientation="horizontal"
@@ -59,22 +72,33 @@
             <Button
                     android:text="Register"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent" android:id="@+id/registerButton"
-                    android:layout_weight="4" android:background="@drawable/rounded_corner_view"
+                    android:layout_height="match_parent"
+                    android:id="@+id/registerButton"
+                    android:layout_weight="4"
+                    android:background="@drawable/rounded_corner_view"
                     app:backgroundTint="@color/registerButtonBackgroundColor"
-                    android:textSize="14sp" android:paddingTop="2dp"
+                    android:textSize="14sp"
+                    android:paddingTop="2dp"
                     android:textAllCaps="false"
             />
-            <Space android:layout_width="40dp" android:layout_height="0dp" android:layout_weight="3"/>
+            <Space
+                    android:layout_width="40dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+            />
             <Button
                     android:text="Login"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent" android:id="@+id/loginButton"
+                    android:layout_height="match_parent"
+                    android:id="@+id/loginButton"
                     android:background="@drawable/rounded_corner_view"
                     app:backgroundTint="@color/loginButtonBackgroundColor"
-                    android:layout_weight="4" android:paddingTop="2dp"
-                    android:textAllCaps="false" android:maxLines="1"
-                    android:textSize="14sp"/>
+                    android:layout_weight="4"
+                    android:paddingTop="2dp"
+                    android:textAllCaps="false"
+                    android:maxLines="1"
+                    android:textSize="14sp"
+            />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
