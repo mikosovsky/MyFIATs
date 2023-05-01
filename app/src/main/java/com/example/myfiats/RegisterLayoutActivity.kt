@@ -1,10 +1,12 @@
 package com.example.myfiats
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import java.util.*
 
 class RegisterLayoutActivity : AppCompatActivity() {
 
@@ -30,6 +32,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
         supportActionBar?.hide()
         setUpViews()
         goBackButtonOnClick()
+        setUpPopUpDataPickerAtBirthdateEditText()
     }
     // Function to set up all views in register_layout.xml
     private fun setUpViews(){
@@ -63,7 +66,28 @@ class RegisterLayoutActivity : AppCompatActivity() {
         val emailEditTextIsNotEmpty = emailEditText.text.isNotEmpty()
         val passwordEditTextIsNotEmpty = passwordEditText.text.isNotEmpty()
         val confirmPasswordEditTextIsNotEmpty = confirmPasswordEditText.text.isNotEmpty()
-        
 
+
+    }
+
+    // Function for PopUp DataPicker while click at birthdateEditText
+    private fun setUpPopUpDataPickerAtBirthdateEditText(){
+        birthdateEditText.setOnClickListener{
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+            val datePickerDialog = DatePickerDialog(
+                this,
+                { view, year, monthOfYear, dayOfMonth ->
+                    val date = (dayOfMonth.toString() + "." + (monthOfYear + 1) + "." + year)
+                    birthdateEditText.setText(date)
+                },
+                year,
+                month,
+                day
+            )
+            datePickerDialog.show()
+        }
     }
 }

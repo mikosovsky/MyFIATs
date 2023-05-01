@@ -95,6 +95,10 @@
                     android:paddingRight="20dp"
                     android:layout_weight="5"
                     android:textColor="@color/whiteTintColor"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
             />
             <Space
                     android:layout_width="0dp"
