@@ -4,8 +4,13 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -23,6 +28,9 @@ class RegisterLayoutActivity : AppCompatActivity() {
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var confirmPasswordEditText: EditText
+    // Firebase
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register_layout)
@@ -31,9 +39,11 @@ class RegisterLayoutActivity : AppCompatActivity() {
     // Set up function (Here are all declarations)
     private fun setUp(){
         supportActionBar?.hide()
+        auth = Firebase.auth
         setUpViews()
         goBackButtonOnClick()
         setUpPopUpDataPickerAtBirthdateEditText()
+        registerButtonOnClick()
     }
     // Function to set up all views in register_layout.xml
     private fun setUpViews(){
@@ -56,7 +66,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
     // Functionality for registerButtonOnClick (register new user in firebase)
     private fun registerButtonOnClick(){
         registerButton.setOnClickListener {
-
+            checkEditTextsForContent()
         }
     }
     // Function is responsible for checking the correct text in EditTexts
@@ -78,8 +88,24 @@ class RegisterLayoutActivity : AppCompatActivity() {
                 val calendar = Calendar.getInstance()
                 calendar.add(Calendar.YEAR,-18)
                 val minimumBirthdateDate = calendar.time
-                if (birthdateDate >= minimumBirthdateDate) {
-
+                if (birthdateDate <= minimumBirthdateDate) {
+                    // Firebase sign up code to refactor
+                    val emailString = emailEditText.text.toString()
+                    auth.createUserWithEmailAndPassword(emailString,passwordString)
+                        .addOnCompleteListener(this) { task ->
+                            if (task.isSuccessful) {
+                                Log.d("FIREBASE","createUserWithEmail:sucess")
+                                auth.signOut()
+                                startActivity(loginLayoutActivityIntent)
+                            } else {
+                                Log.w("FIREBASE", "createUserWithEmail:failure", task.exception)
+                                Toast.makeText(
+                                    baseContext,
+                                    "Authentication failed.",
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                            }
+                        }
                 } else{
                     // Here will be code for handle underage birthdate
                 }
