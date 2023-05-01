@@ -55,4 +55,15 @@ class RegisterLayoutActivity : AppCompatActivity() {
 
         }
     }
+    // Function is responsible for checking the correct text in EditTexts
+    private fun checkEditTextsForContent(){
+        val nameEditTextIsNotEmpty = nameEditText.text.isNotEmpty()
+        val surnameEditTextIsNotEmpty = surnameEditText.text.isNotEmpty()
+        val birthdateEditTextIsNotEmpty = birthdateEditText.text.isNotEmpty()
+        val emailEditTextIsNotEmpty = emailEditText.text.isNotEmpty()
+        val passwordEditTextIsNotEmpty = passwordEditText.text.isNotEmpty()
+        val confirmPasswordEditTextIsNotEmpty = confirmPasswordEditText.text.isNotEmpty()
+        
+
+    }
 }
