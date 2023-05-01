@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import java.text.SimpleDateFormat
 import java.util.*
 
 class RegisterLayoutActivity : AppCompatActivity() {
@@ -66,7 +67,28 @@ class RegisterLayoutActivity : AppCompatActivity() {
         val emailEditTextIsNotEmpty = emailEditText.text.isNotEmpty()
         val passwordEditTextIsNotEmpty = passwordEditText.text.isNotEmpty()
         val confirmPasswordEditTextIsNotEmpty = confirmPasswordEditText.text.isNotEmpty()
+        if (nameEditTextIsNotEmpty && surnameEditTextIsNotEmpty && birthdateEditTextIsNotEmpty && emailEditTextIsNotEmpty && passwordEditTextIsNotEmpty && confirmPasswordEditTextIsNotEmpty) {
+            val passwordString = passwordEditText.text.toString()
+            val confirmPasswordString = confirmPasswordEditText.text.toString()
+            val passwordLength = passwordString.length
+            // Later I'm going to make more restricts passwords like min 8 signs, 1 special sign, 1 numeric sign, 1 big letter
+            if (passwordString == confirmPasswordString && passwordLength >= 6) {
+                val birthdateString = birthdateEditText.text.toString()
+                val birthdateDate = SimpleDateFormat("dd.MM.yyyy").parse(birthdateString)
+                val calendar = Calendar.getInstance()
+                calendar.add(Calendar.YEAR,-18)
+                val minimumBirthdateDate = calendar.time
+                if (birthdateDate >= minimumBirthdateDate) {
 
+                } else{
+                    // Here will be code for handle underage birthdate
+                }
+            }else {
+                // Here will be code for handle not equal passwords
+            }
+        } else {
+            // Here will be code for handle not content in EditTexts
+        }
 
     }
 
