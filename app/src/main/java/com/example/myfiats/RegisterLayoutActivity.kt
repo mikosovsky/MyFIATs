@@ -92,45 +92,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
                 calendar.add(Calendar.YEAR,-18)
                 val minimumBirthdateDate = calendar.time
                 if (birthdateDate <= minimumBirthdateDate) {
-                    // Firebase sign up code to refactor
-                    val emailString = emailEditText.text.toString()
-                    auth.createUserWithEmailAndPassword(emailString,passwordString)
-                        .addOnCompleteListener(this) { task ->
-                            if (task.isSuccessful) {
-                                val firebaseAuthLogNameString = getString(R.string.firebaseAuthLogName)
-                                Log.d(firebaseAuthLogNameString,"createUserWithEmail:sucess")
-                                val nameString = nameEditText.text.toString()
-                                val surnameString = surnameEditText.text.toString()
-                                val user = hashMapOf(
-                                    "email" to emailString,
-                                    "name" to nameString,
-                                    "surname" to surnameString,
-                                    "birthdate" to birthdateString,
-                                )
-                                print(user)
-                                database.collection("users")
-                                    .add(user)
-                                    .addOnSuccessListener { documentReference ->
-                                        val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
-                                        Log.d(firebaseFirestoreLogNameString, "DocumentSnapshot added with ID: ${documentReference.id}")
-                                        auth.signOut()
-                                        startActivity(loginLayoutActivityIntent)
-                                    }
-                                    .addOnFailureListener { e ->
-                                        val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
-                                        Log.w(firebaseFirestoreLogNameString, "Error adding document", e)
-                                    }
-
-                            } else {
-                                val firebaseAuthLogNameString = getString(R.string.firebaseAuthLogName)
-                                Log.w(firebaseAuthLogNameString, "createUserWithEmail:failure", task.exception)
-                                Toast.makeText(
-                                    baseContext,
-                                    "Authentication failed.",
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                            }
-                        }
+                    createNewAccountInFirebase()
                 } else{
                     // Here will be code for handle underage birthdate
                 }
@@ -162,5 +124,50 @@ class RegisterLayoutActivity : AppCompatActivity() {
             )
             datePickerDialog.show()
         }
+    }
+
+    // Function which create new account in Firebase
+    private fun createNewAccountInFirebase() {
+        // Firebase sign up code to refactor
+        val emailString = emailEditText.text.toString()
+        val passwordString = passwordEditText.text.toString()
+        val birthdateString = birthdateEditText.text.toString()
+        auth.createUserWithEmailAndPassword(emailString,passwordString)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val firebaseAuthLogNameString = getString(R.string.firebaseAuthLogName)
+                    Log.d(firebaseAuthLogNameString,"createUserWithEmail:sucess")
+                    val nameString = nameEditText.text.toString()
+                    val surnameString = surnameEditText.text.toString()
+                    val user = hashMapOf(
+                        "email" to emailString,
+                        "name" to nameString,
+                        "surname" to surnameString,
+                        "birthdate" to birthdateString,
+                    )
+                    print(user)
+                    database.collection("users")
+                        .add(user)
+                        .addOnSuccessListener { documentReference ->
+                            val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
+                            Log.d(firebaseFirestoreLogNameString, "DocumentSnapshot added with ID: ${documentReference.id}")
+                            auth.signOut()
+                            startActivity(loginLayoutActivityIntent)
+                        }
+                        .addOnFailureListener { e ->
+                            val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
+                            Log.w(firebaseFirestoreLogNameString, "Error adding document", e)
+                        }
+
+                } else {
+                    val firebaseAuthLogNameString = getString(R.string.firebaseAuthLogName)
+                    Log.w(firebaseAuthLogNameString, "createUserWithEmail:failure", task.exception)
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
     }
 }
