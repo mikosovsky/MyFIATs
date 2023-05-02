@@ -69,31 +69,33 @@ class RegisterLayoutActivity : AppCompatActivity() {
     // Functionality for registerButtonOnClick (register new user in firebase)
     private fun registerButtonOnClick(){
         registerButton.setOnClickListener {
-            checkEditTextsForContent()
+            checkEditTextsForContentAndRegisterNewUser()
         }
     }
     // Function is responsible for checking the correct text in EditTexts
-    private fun checkEditTextsForContent(){
+    private fun checkEditTextsForContentAndRegisterNewUser(){
+        // Extract all important informations from EditTexts to register new user
         val nameEditTextIsNotEmpty = nameEditText.text.isNotEmpty()
         val surnameEditTextIsNotEmpty = surnameEditText.text.isNotEmpty()
         val birthdateEditTextIsNotEmpty = birthdateEditText.text.isNotEmpty()
         val emailEditTextIsNotEmpty = emailEditText.text.isNotEmpty()
         val passwordEditTextIsNotEmpty = passwordEditText.text.isNotEmpty()
         val confirmPasswordEditTextIsNotEmpty = confirmPasswordEditText.text.isNotEmpty()
+        val passwordString = passwordEditText.text.toString()
+        val confirmPasswordString = confirmPasswordEditText.text.toString()
+        val passwordLength = passwordString.length
+        val birthdateString = birthdateEditText.text.toString()
+        val emailString = emailEditText.text.toString()
+        val birthdateDate = SimpleDateFormat("dd.MM.yyyy").parse(birthdateString)
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.YEAR,-18)
+        val minimumBirthdateDate = calendar.time
         if (nameEditTextIsNotEmpty && surnameEditTextIsNotEmpty && birthdateEditTextIsNotEmpty && emailEditTextIsNotEmpty && passwordEditTextIsNotEmpty && confirmPasswordEditTextIsNotEmpty) {
-            val passwordString = passwordEditText.text.toString()
-            val confirmPasswordString = confirmPasswordEditText.text.toString()
-            val passwordLength = passwordString.length
             // Later I'm going to make more restricts passwords like min 8 signs, 1 special sign, 1 numeric sign, 1 big letter
             if (passwordString == confirmPasswordString && passwordLength >= 6) {
-                val birthdateString = birthdateEditText.text.toString()
-                val birthdateDate = SimpleDateFormat("dd.MM.yyyy").parse(birthdateString)
-                val calendar = Calendar.getInstance()
-                calendar.add(Calendar.YEAR,-18)
-                val minimumBirthdateDate = calendar.time
                 if (birthdateDate <= minimumBirthdateDate) {
-                    createNewAccountInFirebase()
-                } else{
+                    createNewAccountInFirebase(emailString,passwordString,birthdateString)
+                } else {
                     // Here will be code for handle underage birthdate
                 }
             }else {
@@ -127,11 +129,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
     }
 
     // Function which create new account in Firebase
-    private fun createNewAccountInFirebase() {
-        // Firebase sign up code to refactor
-        val emailString = emailEditText.text.toString()
-        val passwordString = passwordEditText.text.toString()
-        val birthdateString = birthdateEditText.text.toString()
+    private fun createNewAccountInFirebase(emailString: String, passwordString: String, birthdateString: String) {
         auth.createUserWithEmailAndPassword(emailString,passwordString)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -169,5 +167,17 @@ class RegisterLayoutActivity : AppCompatActivity() {
                     ).show()
                 }
             }
+    }
+    // Function is responsible for handling underage birthdate in birthdateEditText
+    private fun handleUnderageBirthdate(){
+
+    }
+    // Function is responsible for handling not identical passwords in passwordEditText and confirmPasswordEditText
+    private fun handleNotIdenticalPasswords(){
+
+    }
+    // Function is responsible for handling not filled up EditTexts
+    private fun handleNotFilledUpEditTexts(){
+
     }
 }
