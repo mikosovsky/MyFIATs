@@ -11,6 +11,8 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,7 +32,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
     private lateinit var confirmPasswordEditText: EditText
     // Firebase
     private lateinit var auth: FirebaseAuth
-
+    private lateinit var database: FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register_layout)
@@ -40,6 +42,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
     private fun setUp(){
         supportActionBar?.hide()
         auth = Firebase.auth
+        database = Firebase.firestore
         setUpViews()
         goBackButtonOnClick()
         setUpPopUpDataPickerAtBirthdateEditText()
@@ -95,8 +98,26 @@ class RegisterLayoutActivity : AppCompatActivity() {
                         .addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
                                 Log.d("FIREBASE","createUserWithEmail:sucess")
-                                auth.signOut()
-                                startActivity(loginLayoutActivityIntent)
+                                val nameString = nameEditText.text.toString()
+                                val surnameString = surnameEditText.text.toString()
+                                val user = hashMapOf(
+                                    "email" to emailString,
+                                    "name" to nameString,
+                                    "surname" to surnameString,
+                                    "birthdate" to birthdateString,
+                                )
+                                print(user)
+                                database.collection("users")
+                                    .add(user)
+                                    .addOnSuccessListener { documentReference ->
+                                        Log.d("FIREBASE.FIRESTORE", "DocumentSnapshot added with ID: ${documentReference.id}")
+                                        auth.signOut()
+                                        startActivity(loginLayoutActivityIntent)
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.w("FIREBASE.FIRESTORE", "Error adding document", e)
+                                    }
+
                             } else {
                                 Log.w("FIREBASE", "createUserWithEmail:failure", task.exception)
                                 Toast.makeText(
