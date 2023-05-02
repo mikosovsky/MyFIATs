@@ -97,7 +97,8 @@ class RegisterLayoutActivity : AppCompatActivity() {
                     auth.createUserWithEmailAndPassword(emailString,passwordString)
                         .addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
-                                Log.d("FIREBASE","createUserWithEmail:sucess")
+                                val firebaseAuthLogNameString = getString(R.string.firebaseAuthLogName)
+                                Log.d(firebaseAuthLogNameString,"createUserWithEmail:sucess")
                                 val nameString = nameEditText.text.toString()
                                 val surnameString = surnameEditText.text.toString()
                                 val user = hashMapOf(
@@ -110,16 +111,19 @@ class RegisterLayoutActivity : AppCompatActivity() {
                                 database.collection("users")
                                     .add(user)
                                     .addOnSuccessListener { documentReference ->
-                                        Log.d("FIREBASE.FIRESTORE", "DocumentSnapshot added with ID: ${documentReference.id}")
+                                        val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
+                                        Log.d(firebaseFirestoreLogNameString, "DocumentSnapshot added with ID: ${documentReference.id}")
                                         auth.signOut()
                                         startActivity(loginLayoutActivityIntent)
                                     }
                                     .addOnFailureListener { e ->
-                                        Log.w("FIREBASE.FIRESTORE", "Error adding document", e)
+                                        val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
+                                        Log.w(firebaseFirestoreLogNameString, "Error adding document", e)
                                     }
 
                             } else {
-                                Log.w("FIREBASE", "createUserWithEmail:failure", task.exception)
+                                val firebaseAuthLogNameString = getString(R.string.firebaseAuthLogName)
+                                Log.w(firebaseAuthLogNameString, "createUserWithEmail:failure", task.exception)
                                 Toast.makeText(
                                     baseContext,
                                     "Authentication failed.",

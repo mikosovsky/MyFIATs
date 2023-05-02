@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MyFIATs</string>
+    <string name="firebaseAuthLogName">FIREBASE.AUTH</string>
+    <string name="firebaseFirestoreLogName">FIREBASE.FIRESTORE</string>
 </resources>
