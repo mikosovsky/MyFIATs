@@ -162,9 +162,19 @@
                 android:paddingRight="20dp"
                 android:textColor="@color/whiteTintColor"
         />
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/errorPasswordTextView"
+                android:text="Your password is too short!"
+                android:textColor="@color/errorColor"
+                android:textSize="10sp"
+                android:paddingLeft="20dp"
+                android:visibility="invisible"
+        />
         <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="10dp"
         />
         <EditText
                 android:layout_width="match_parent"
@@ -179,9 +189,19 @@
                 android:paddingRight="20dp"
                 android:textColor="@color/whiteTintColor"
         />
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/errorConfirmPasswordTextView"
+                android:text="Passwords are not the same!"
+                android:textColor="@color/errorColor"
+                android:textSize="10sp"
+                android:paddingLeft="20dp"
+                android:visibility="invisible"
+        />
         <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="10dp"
         />
         <LinearLayout
                 android:orientation="horizontal"

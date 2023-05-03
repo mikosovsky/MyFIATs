@@ -15,6 +15,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
+import org.checkerframework.checker.units.qual.Length
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -37,6 +38,8 @@ class RegisterLayoutActivity : AppCompatActivity() {
 
     // TextView
     private lateinit var errorBirthdateTextView: TextView
+    private lateinit var errorPasswordTextView: TextView
+    private lateinit var errorConfirmPasswordTextView: TextView
 
     // Firebase
     private lateinit var auth: FirebaseAuth
@@ -70,6 +73,8 @@ class RegisterLayoutActivity : AppCompatActivity() {
         passwordEditText = findViewById(R.id.passwordEditText)
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText)
         errorBirthdateTextView = findViewById(R.id.errorBirthdateTextView)
+        errorPasswordTextView = findViewById(R.id.errorPasswordTextView)
+        errorConfirmPasswordTextView = findViewById(R.id.errorConfirmPasswordTextView)
     }
 
     // Functionality for goBackButton (Go back to login_layout.xml)
@@ -108,12 +113,14 @@ class RegisterLayoutActivity : AppCompatActivity() {
         val minimumBirthdateDate = calendar.time
         if (EditTextsAreNotEmpty && passwordString == confirmPasswordString && passwordLength >= 6 && birthdateDate <= minimumBirthdateDate) {
             // Later I'm going to make more restricts passwords like min 8 signs, 1 special sign, 1 numeric sign, 1 big letter
+            setEditTextsBackgroundsBlue()
             createNewAccountInFirebase(emailString, passwordString, birthdateString)
         } else {
+            setEditTextsBackgroundsBlue()
             // Here will be code for handle underage birthdate
             handleUnderageBirthdate(birthdateDate, minimumBirthdateDate)
             // Here will be code for handle not equal passwords or not enough length
-
+            handleNotIdenticalOrTooShortPasswords(passwordString, confirmPasswordString, passwordLength)
             // Here will be code for handle not content in EditTexts
         }
     }
@@ -186,22 +193,38 @@ class RegisterLayoutActivity : AppCompatActivity() {
     // Function is responsible for handling underage birthdate in birthdateEditText
     private fun handleUnderageBirthdate(birthdateDate: Date, minimumBirthdateDate: Date) {
         if (birthdateDate >= minimumBirthdateDate) {
+            val birthdateUnderageError = getString(R.string.birthdateUnderageError)
+            errorBirthdateTextView.text = birthdateUnderageError
             errorBirthdateTextView.visibility = View.VISIBLE
             birthdateEditText.background = getDrawable(R.drawable.error_rounded_corner_view)
         }
     }
 
     // Function is responsible for handling not identical passwords in passwordEditText and confirmPasswordEditText
-    private fun handleNotIdenticalPasswords() {
-
+    private fun handleNotIdenticalOrTooShortPasswords(passwordString: String, confirmPasswordString: String, passwordLength: Int) {
+        val passwordNotEnoughLongError = getString(R.string.passwordNotEnoughLongError)
+        val passwordsAreNotTheSame = getString(R.string.passwordsAreNotTheSame)
+        if (passwordString == confirmPasswordString && passwordLength < 6) {
+            setRedBackgroundOfEditTextAndShowError(passwordEditText, errorPasswordTextView, passwordNotEnoughLongError)
+        } else if (passwordString != confirmPasswordString && passwordLength >= 6) {
+            setRedBackgroundOfEditTextAndShowError(confirmPasswordEditText, errorConfirmPasswordTextView, passwordsAreNotTheSame)
+        } else if (passwordString != confirmPasswordString && passwordLength < 6) {
+            setRedBackgroundOfEditTextAndShowError(passwordEditText, errorPasswordTextView, passwordNotEnoughLongError)
+            setRedBackgroundOfEditTextAndShowError(confirmPasswordEditText, errorConfirmPasswordTextView, passwordsAreNotTheSame)
+        }
     }
 
     // Function is responsible for handling not filled up EditTexts
     private fun handleNotFilledUpEditTexts() {
 
     }
-
-    //Function to set all EditTexts' backgrounds blue
+    // Function to set chosen EditText's background red and show error
+    fun setRedBackgroundOfEditTextAndShowError(errorEditText: EditText, errorTextView: TextView, errorMessage: String) {
+        errorEditText.background = getDrawable(R.drawable.error_rounded_corner_view)
+        errorTextView.text = errorMessage
+        errorTextView.visibility = View.VISIBLE
+    }
+    // Function to set all EditTexts' backgrounds blue
     fun setEditTextsBackgroundsBlue() {
         nameEditText.background = getDrawable(R.drawable.rounded_corner_view)
         surnameEditText.background = getDrawable(R.drawable.rounded_corner_view)
@@ -209,5 +232,8 @@ class RegisterLayoutActivity : AppCompatActivity() {
         emailEditText.background = getDrawable(R.drawable.rounded_corner_view)
         passwordEditText.background = getDrawable(R.drawable.rounded_corner_view)
         confirmPasswordEditText.background = getDrawable(R.drawable.rounded_corner_view)
+        errorBirthdateTextView.visibility = View.INVISIBLE
+        errorPasswordTextView.visibility = View.INVISIBLE
+        errorConfirmPasswordTextView.visibility = View.INVISIBLE
     }
 }

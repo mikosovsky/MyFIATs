@@ -2,4 +2,7 @@
     <string name="app_name">MyFIATs</string>
     <string name="firebaseAuthLogName">FIREBASE.AUTH</string>
     <string name="firebaseFirestoreLogName">FIREBASE.FIRESTORE</string>
+    <string name="birthdateUnderageError">You are underage!</string>
+    <string name="passwordNotEnoughLongError">Your password is too short!</string>
+    <string name="passwordsAreNotTheSame">Passwords are not the same!</string>
 </resources>
