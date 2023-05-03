@@ -102,25 +102,29 @@ class RegisterLayoutActivity : AppCompatActivity() {
         val confirmPasswordEditTextIsNotEmpty = confirmPasswordEditText.text.isNotEmpty()
         val EditTextsAreNotEmpty =
             nameEditTextIsNotEmpty && surnameEditTextIsNotEmpty && birthdateEditTextIsNotEmpty && emailEditTextIsNotEmpty && passwordEditTextIsNotEmpty && confirmPasswordEditTextIsNotEmpty
-        val passwordString = passwordEditText.text.toString()
-        val confirmPasswordString = confirmPasswordEditText.text.toString()
-        val passwordLength = passwordString.length
-        val birthdateString = birthdateEditText.text.toString()
-        val emailString = emailEditText.text.toString()
-        val birthdateDate = SimpleDateFormat("dd.MM.yyyy").parse(birthdateString)
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.YEAR, -18)
-        val minimumBirthdateDate = calendar.time
-        if (EditTextsAreNotEmpty && passwordString == confirmPasswordString && passwordLength >= 6 && birthdateDate <= minimumBirthdateDate) {
+        if (EditTextsAreNotEmpty) {
+            val passwordString = passwordEditText.text.toString()
+            val confirmPasswordString = confirmPasswordEditText.text.toString()
+            val passwordLength = passwordString.length
+            val birthdateString = birthdateEditText.text.toString()
+            val emailString = emailEditText.text.toString()
+            val birthdateDate = SimpleDateFormat("dd.MM.yyyy").parse(birthdateString)
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.YEAR, -18)
+            val minimumBirthdateDate = calendar.time
             // Later I'm going to make more restricts passwords like min 8 signs, 1 special sign, 1 numeric sign, 1 big letter
-            setEditTextsBackgroundsBlue()
-            createNewAccountInFirebase(emailString, passwordString, birthdateString)
+            if ( passwordString == confirmPasswordString && passwordLength >= 6 && birthdateDate <= minimumBirthdateDate) {
+                setEditTextsBackgroundsBlue()
+                createNewAccountInFirebase(emailString, passwordString, birthdateString)
+            } else {
+                setEditTextsBackgroundsBlue()
+                // Here will be code for handle underage birthdate
+                handleUnderageBirthdate(birthdateDate, minimumBirthdateDate)
+                // Here will be code for handle not equal passwords or not enough length
+                handleNotIdenticalOrTooShortPasswords(passwordString, confirmPasswordString, passwordLength)
+            }
         } else {
             setEditTextsBackgroundsBlue()
-            // Here will be code for handle underage birthdate
-            handleUnderageBirthdate(birthdateDate, minimumBirthdateDate)
-            // Here will be code for handle not equal passwords or not enough length
-            handleNotIdenticalOrTooShortPasswords(passwordString, confirmPasswordString, passwordLength)
             // Here will be code for handle not content in EditTexts
         }
     }
@@ -161,7 +165,6 @@ class RegisterLayoutActivity : AppCompatActivity() {
                         "surname" to surnameString,
                         "birthdate" to birthdateString,
                     )
-                    print(user)
                     database.collection("users")
                         .add(user)
                         .addOnSuccessListener { documentReference ->
