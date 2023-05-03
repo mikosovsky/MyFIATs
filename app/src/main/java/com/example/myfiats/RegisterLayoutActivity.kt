@@ -173,27 +173,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
                     Log.d(firebaseAuthLogNameString, "createUserWithEmail:sucess")
                     val nameString = nameEditText.text.toString()
                     val surnameString = surnameEditText.text.toString()
-                    val user = hashMapOf(
-                        "email" to emailString,
-                        "name" to nameString,
-                        "surname" to surnameString,
-                        "birthdate" to birthdateString,
-                    )
-                    database.collection("users")
-                        .add(user)
-                        .addOnSuccessListener { documentReference ->
-                            val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
-                            Log.d(
-                                firebaseFirestoreLogNameString,
-                                "DocumentSnapshot added with ID: ${documentReference.id}"
-                            )
-                            auth.signOut()
-                            startActivity(loginLayoutActivityIntent)
-                        }
-                        .addOnFailureListener { e ->
-                            val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
-                            Log.w(firebaseFirestoreLogNameString, "Error adding document", e)
-                        }
+                   sendPersonalDataToDatabaseAndGoBackToLoginLayout(emailString, nameString, surnameString, birthdateString)
 
                 } else {
                     val firebaseAuthLogNameString = getString(R.string.firebaseAuthLogName)
@@ -206,7 +186,27 @@ class RegisterLayoutActivity : AppCompatActivity() {
                 }
             }
     }
-
+    // Function to send important information like name, surname, birthdate to database
+    fun sendPersonalDataToDatabaseAndGoBackToLoginLayout(emailString: String, nameString: String, surnameString: String, birthdateString: String){
+        val user = hashMapOf(
+            "email" to emailString,
+            "name" to nameString,
+            "surname" to surnameString,
+            "birthdate" to birthdateString,
+        )
+        database.collection("users")
+            .add(user)
+            .addOnSuccessListener { documentReference ->
+                val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
+                Log.d(firebaseFirestoreLogNameString, "DocumentSnapshot added with ID: ${documentReference.id}")
+                auth.signOut()
+                startActivity(loginLayoutActivityIntent)
+            }
+            .addOnFailureListener { e ->
+                val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
+                Log.w(firebaseFirestoreLogNameString, "Error adding document", e)
+            }
+    }
     // Function is responsible for handling underage birthdate in birthdateEditText
     private fun handleUnderageBirthdate(birthdateDate: Date, minimumBirthdateDate: Date) {
         if (birthdateDate >= minimumBirthdateDate) {
@@ -221,12 +221,10 @@ class RegisterLayoutActivity : AppCompatActivity() {
     private fun handleNotIdenticalOrTooShortPasswords(passwordString: String, confirmPasswordString: String, passwordLength: Int) {
         val passwordNotEnoughLongErrorString = getString(R.string.passwordNotEnoughLongError)
         val passwordsAreNotTheSameString = getString(R.string.passwordsAreNotTheSame)
-        if (passwordString == confirmPasswordString && passwordLength < 6) {
+        if (passwordLength < 6) {
             setRedBackgroundOfEditTextAndShowError(passwordEditText, errorPasswordTextView, passwordNotEnoughLongErrorString)
-        } else if (passwordString != confirmPasswordString && passwordLength >= 6) {
-            setRedBackgroundOfEditTextAndShowError(confirmPasswordEditText, errorConfirmPasswordTextView, passwordsAreNotTheSameString)
-        } else if (passwordString != confirmPasswordString && passwordLength < 6) {
-            setRedBackgroundOfEditTextAndShowError(passwordEditText, errorPasswordTextView, passwordNotEnoughLongErrorString)
+        }
+        if (passwordString != confirmPasswordString) {
             setRedBackgroundOfEditTextAndShowError(confirmPasswordEditText, errorConfirmPasswordTextView, passwordsAreNotTheSameString)
         }
     }
