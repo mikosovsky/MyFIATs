@@ -22,9 +22,11 @@ class RegisterLayoutActivity : AppCompatActivity() {
 
     //Intents
     private lateinit var loginLayoutActivityIntent: Intent
+
     //Buttons
-    private lateinit var goBackButton:Button
+    private lateinit var goBackButton: Button
     private lateinit var registerButton: Button
+
     // EditText
     private lateinit var nameEditText: EditText
     private lateinit var surnameEditText: EditText
@@ -32,8 +34,10 @@ class RegisterLayoutActivity : AppCompatActivity() {
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var confirmPasswordEditText: EditText
+
     // TextView
     private lateinit var errorBirthdateTextView: TextView
+
     // Firebase
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseFirestore
@@ -42,8 +46,9 @@ class RegisterLayoutActivity : AppCompatActivity() {
         setContentView(R.layout.register_layout)
         setUp()
     }
+
     // Set up function (Here are all declarations)
-    private fun setUp(){
+    private fun setUp() {
         supportActionBar?.hide()
         auth = Firebase.auth
         database = Firebase.firestore
@@ -52,8 +57,9 @@ class RegisterLayoutActivity : AppCompatActivity() {
         setUpPopUpDataPickerAtBirthdateEditText()
         registerButtonOnClick()
     }
+
     // Function to set up all views in register_layout.xml
-    private fun setUpViews(){
+    private fun setUpViews() {
         loginLayoutActivityIntent = Intent(this@RegisterLayoutActivity, LoginLayoutActivity::class.java)
         goBackButton = findViewById(R.id.goBackButton)
         registerButton = findViewById(R.id.registerButton)
@@ -65,20 +71,23 @@ class RegisterLayoutActivity : AppCompatActivity() {
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText)
         errorBirthdateTextView = findViewById(R.id.errorBirthdateTextView)
     }
+
     // Functionality for goBackButton (Go back to login_layout.xml)
-    private fun goBackButtonOnClick(){
+    private fun goBackButtonOnClick() {
         goBackButton.setOnClickListener {
             startActivity(loginLayoutActivityIntent)
         }
     }
+
     // Functionality for registerButtonOnClick (register new user in firebase)
-    private fun registerButtonOnClick(){
+    private fun registerButtonOnClick() {
         registerButton.setOnClickListener {
             checkEditTextsForContentAndRegisterNewUser()
         }
     }
+
     // Function is responsible for checking the correct text in EditTexts
-    private fun checkEditTextsForContentAndRegisterNewUser(){
+    private fun checkEditTextsForContentAndRegisterNewUser() {
         // Extract all important information from EditTexts to register new user
         val nameEditTextIsNotEmpty = nameEditText.text.isNotEmpty()
         val surnameEditTextIsNotEmpty = surnameEditText.text.isNotEmpty()
@@ -86,6 +95,8 @@ class RegisterLayoutActivity : AppCompatActivity() {
         val emailEditTextIsNotEmpty = emailEditText.text.isNotEmpty()
         val passwordEditTextIsNotEmpty = passwordEditText.text.isNotEmpty()
         val confirmPasswordEditTextIsNotEmpty = confirmPasswordEditText.text.isNotEmpty()
+        val EditTextsAreNotEmpty =
+            nameEditTextIsNotEmpty && surnameEditTextIsNotEmpty && birthdateEditTextIsNotEmpty && emailEditTextIsNotEmpty && passwordEditTextIsNotEmpty && confirmPasswordEditTextIsNotEmpty
         val passwordString = passwordEditText.text.toString()
         val confirmPasswordString = confirmPasswordEditText.text.toString()
         val passwordLength = passwordString.length
@@ -93,29 +104,23 @@ class RegisterLayoutActivity : AppCompatActivity() {
         val emailString = emailEditText.text.toString()
         val birthdateDate = SimpleDateFormat("dd.MM.yyyy").parse(birthdateString)
         val calendar = Calendar.getInstance()
-        calendar.add(Calendar.YEAR,-18)
+        calendar.add(Calendar.YEAR, -18)
         val minimumBirthdateDate = calendar.time
-        if (nameEditTextIsNotEmpty && surnameEditTextIsNotEmpty && birthdateEditTextIsNotEmpty && emailEditTextIsNotEmpty && passwordEditTextIsNotEmpty && confirmPasswordEditTextIsNotEmpty) {
+        if (EditTextsAreNotEmpty && passwordString == confirmPasswordString && passwordLength >= 6 && birthdateDate <= minimumBirthdateDate) {
             // Later I'm going to make more restricts passwords like min 8 signs, 1 special sign, 1 numeric sign, 1 big letter
-            if (passwordString == confirmPasswordString && passwordLength >= 6) {
-                if (birthdateDate <= minimumBirthdateDate) {
-                    createNewAccountInFirebase(emailString,passwordString,birthdateString)
-                } else {
-                    // Here will be code for handle underage birthdate
-                    handleUnderageBirthdate()
-                }
-            }else {
-                // Here will be code for handle not equal passwords or not enough length
-            }
+            createNewAccountInFirebase(emailString, passwordString, birthdateString)
         } else {
+            // Here will be code for handle underage birthdate
+            handleUnderageBirthdate(birthdateDate, minimumBirthdateDate)
+            // Here will be code for handle not equal passwords or not enough length
+
             // Here will be code for handle not content in EditTexts
         }
-
     }
 
     // Function for PopUp DataPicker while click at birthdateEditText
-    private fun setUpPopUpDataPickerAtBirthdateEditText(){
-        birthdateEditText.setOnClickListener{
+    private fun setUpPopUpDataPickerAtBirthdateEditText() {
+        birthdateEditText.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
@@ -136,11 +141,11 @@ class RegisterLayoutActivity : AppCompatActivity() {
 
     // Function which create new account in Firebase
     private fun createNewAccountInFirebase(emailString: String, passwordString: String, birthdateString: String) {
-        auth.createUserWithEmailAndPassword(emailString,passwordString)
+        auth.createUserWithEmailAndPassword(emailString, passwordString)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val firebaseAuthLogNameString = getString(R.string.firebaseAuthLogName)
-                    Log.d(firebaseAuthLogNameString,"createUserWithEmail:sucess")
+                    Log.d(firebaseAuthLogNameString, "createUserWithEmail:sucess")
                     val nameString = nameEditText.text.toString()
                     val surnameString = surnameEditText.text.toString()
                     val user = hashMapOf(
@@ -154,7 +159,10 @@ class RegisterLayoutActivity : AppCompatActivity() {
                         .add(user)
                         .addOnSuccessListener { documentReference ->
                             val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
-                            Log.d(firebaseFirestoreLogNameString, "DocumentSnapshot added with ID: ${documentReference.id}")
+                            Log.d(
+                                firebaseFirestoreLogNameString,
+                                "DocumentSnapshot added with ID: ${documentReference.id}"
+                            )
                             auth.signOut()
                             startActivity(loginLayoutActivityIntent)
                         }
@@ -174,21 +182,27 @@ class RegisterLayoutActivity : AppCompatActivity() {
                 }
             }
     }
+
     // Function is responsible for handling underage birthdate in birthdateEditText
-    private fun handleUnderageBirthdate(){
-        errorBirthdateTextView.visibility = View.VISIBLE
-        birthdateEditText.background = getDrawable(R.drawable.error_rounded_corner_view)
+    private fun handleUnderageBirthdate(birthdateDate: Date, minimumBirthdateDate: Date) {
+        if (birthdateDate >= minimumBirthdateDate) {
+            errorBirthdateTextView.visibility = View.VISIBLE
+            birthdateEditText.background = getDrawable(R.drawable.error_rounded_corner_view)
+        }
     }
+
     // Function is responsible for handling not identical passwords in passwordEditText and confirmPasswordEditText
-    private fun handleNotIdenticalPasswords(){
+    private fun handleNotIdenticalPasswords() {
 
     }
+
     // Function is responsible for handling not filled up EditTexts
-    private fun handleNotFilledUpEditTexts(){
+    private fun handleNotFilledUpEditTexts() {
 
     }
+
     //Function to set all EditTexts' backgrounds blue
-    fun setEditTextsBackgroundsBlue(){
+    fun setEditTextsBackgroundsBlue() {
         nameEditText.background = getDrawable(R.drawable.rounded_corner_view)
         surnameEditText.background = getDrawable(R.drawable.rounded_corner_view)
         birthdateEditText.background = getDrawable(R.drawable.rounded_corner_view)
