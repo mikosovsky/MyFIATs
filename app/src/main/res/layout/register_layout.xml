@@ -72,9 +72,43 @@
                     android:textColor="@color/whiteTintColor"
             />
         </LinearLayout>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="11"
+    >
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/errorNameTextView"
+                android:text="Fill up!"
+                android:textColor="@color/errorColor"
+                android:textSize="10sp"
+                android:paddingLeft="20dp"
+                android:visibility="invisible"
+                android:layout_weight="5"
+        />
+        <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+        />
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/errorSurnameTextView"
+                android:text="Fill up!"
+                android:textColor="@color/errorColor"
+                android:textSize="10sp"
+                android:paddingLeft="20dp"
+                android:visibility="invisible"
+                android:layout_weight="5"
+        />
+    </LinearLayout>
         <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="10dp"
         />
         <LinearLayout
             android:orientation="horizontal"
@@ -118,10 +152,11 @@
                 android:layout_height="wrap_content"
                 android:text="You are underage!"
                 android:textColor="@color/errorColor"
+                android:paddingLeft="20dp"
                 android:textSize="10sp"
                 android:layout_weight="5"
                 android:visibility="invisible"
-                android:textAlignment="center"/>
+        />
         <Space
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -145,9 +180,19 @@
                 android:paddingRight="20dp"
                 android:textColor="@color/whiteTintColor"
         />
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/errorEmailTextView"
+                android:text="Fill up!"
+                android:textColor="@color/errorColor"
+                android:textSize="10sp"
+                android:paddingLeft="20dp"
+                android:visibility="invisible"
+        />
         <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="10dp"
         />
         <EditText
                 android:layout_width="match_parent"

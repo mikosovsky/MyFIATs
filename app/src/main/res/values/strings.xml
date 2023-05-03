@@ -5,4 +5,5 @@
     <string name="birthdateUnderageError">You are underage!</string>
     <string name="passwordNotEnoughLongError">Your password is too short!</string>
     <string name="passwordsAreNotTheSame">Passwords are not the same!</string>
+    <string name="emptyEditTextError">"Fill up!</string>
 </resources>
