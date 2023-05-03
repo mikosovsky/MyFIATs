@@ -21,4 +21,5 @@
     <color name="blackTintColor">#000000</color>
     <color name="whiteTintColor">#FFFFFF</color>
     <color name="hintColor">#4DFFFFFF</color>
+    <color name="errorColor">#FF3B30</color>
 </resources>

@@ -5,8 +5,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -30,6 +32,8 @@ class RegisterLayoutActivity : AppCompatActivity() {
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var confirmPasswordEditText: EditText
+    // TextView
+    private lateinit var errorBirthdateTextView: TextView
     // Firebase
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseFirestore
@@ -59,6 +63,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText)
+        errorBirthdateTextView = findViewById(R.id.errorBirthdateTextView)
     }
     // Functionality for goBackButton (Go back to login_layout.xml)
     private fun goBackButtonOnClick(){
@@ -74,7 +79,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
     }
     // Function is responsible for checking the correct text in EditTexts
     private fun checkEditTextsForContentAndRegisterNewUser(){
-        // Extract all important informations from EditTexts to register new user
+        // Extract all important information from EditTexts to register new user
         val nameEditTextIsNotEmpty = nameEditText.text.isNotEmpty()
         val surnameEditTextIsNotEmpty = surnameEditText.text.isNotEmpty()
         val birthdateEditTextIsNotEmpty = birthdateEditText.text.isNotEmpty()
@@ -97,6 +102,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
                     createNewAccountInFirebase(emailString,passwordString,birthdateString)
                 } else {
                     // Here will be code for handle underage birthdate
+                    handleUnderageBirthdate()
                 }
             }else {
                 // Here will be code for handle not equal passwords
@@ -170,7 +176,8 @@ class RegisterLayoutActivity : AppCompatActivity() {
     }
     // Function is responsible for handling underage birthdate in birthdateEditText
     private fun handleUnderageBirthdate(){
-
+        errorBirthdateTextView.visibility = View.VISIBLE
+        birthdateEditText.background = getDrawable(R.drawable.error_rounded_corner_view)
     }
     // Function is responsible for handling not identical passwords in passwordEditText and confirmPasswordEditText
     private fun handleNotIdenticalPasswords(){
