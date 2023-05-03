@@ -205,6 +205,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
                 Log.w(firebaseFirestoreLogNameString, "Error adding document", e)
+                // Later here should be code to delete account if personal data wouldn't be sent to database and show warning
             }
     }
     // Function is responsible for handling underage birthdate in birthdateEditText

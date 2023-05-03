@@ -35,6 +35,12 @@ class LoginLayoutActivity : AppCompatActivity() {
             startActivity(registerLayoutActivityIntent)
         }
     }
+    // Functionality for loginButton (Login user and go to logged_layout.xml)
+    private fun loginButtonOnClick() {
+        loginButton.setOnClickListener {
+            
+        }
+    }
     // Function to set up all views in login_layout.xml
     private fun setUpViews(){
         registerLayoutActivityIntent = Intent(this@LoginLayoutActivity, RegisterLayoutActivity::class.java)
