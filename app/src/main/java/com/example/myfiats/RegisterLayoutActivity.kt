@@ -105,7 +105,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
                     handleUnderageBirthdate()
                 }
             }else {
-                // Here will be code for handle not equal passwords
+                // Here will be code for handle not equal passwords or not enough length
             }
         } else {
             // Here will be code for handle not content in EditTexts
@@ -186,5 +186,14 @@ class RegisterLayoutActivity : AppCompatActivity() {
     // Function is responsible for handling not filled up EditTexts
     private fun handleNotFilledUpEditTexts(){
 
+    }
+    //Function to set all EditTexts' backgrounds blue
+    fun setEditTextsBackgroundsBlue(){
+        nameEditText.background = getDrawable(R.drawable.rounded_corner_view)
+        surnameEditText.background = getDrawable(R.drawable.rounded_corner_view)
+        birthdateEditText.background = getDrawable(R.drawable.rounded_corner_view)
+        emailEditText.background = getDrawable(R.drawable.rounded_corner_view)
+        passwordEditText.background = getDrawable(R.drawable.rounded_corner_view)
+        confirmPasswordEditText.background = getDrawable(R.drawable.rounded_corner_view)
     }
 }
