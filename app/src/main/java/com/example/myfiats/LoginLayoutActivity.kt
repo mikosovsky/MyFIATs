@@ -38,7 +38,13 @@ class LoginLayoutActivity : AppCompatActivity() {
     // Functionality for loginButton (Login user and go to logged_layout.xml)
     private fun loginButtonOnClick() {
         loginButton.setOnClickListener {
-            
+            val emailEditTextIsNotEmpty = emailEditText.text.isNotEmpty()
+            val passwordEditTextIsNotEmpty = passwordEditText.text.isNotEmpty()
+            if (emailEditTextIsNotEmpty && passwordEditTextIsNotEmpty) {
+                
+            } else {
+
+            }
         }
     }
     // Function to set up all views in login_layout.xml
