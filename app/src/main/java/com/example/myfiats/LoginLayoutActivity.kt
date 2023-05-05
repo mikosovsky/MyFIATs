@@ -39,6 +39,7 @@ class LoginLayoutActivity : AppCompatActivity() {
         auth = Firebase.auth
         setUpViews()
         registerButtonOnClick()
+        loginButtonOnClick()
     }
 
     // Functionality for registerButton (Go to register_layout.xml)
