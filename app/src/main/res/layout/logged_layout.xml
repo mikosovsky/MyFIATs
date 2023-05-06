@@ -21,15 +21,14 @@
                 android:layout_height="50dp"
                 android:weightSum="7"
         >
-            <Button
+            <ImageButton
                     android:layout_width="0dp"
-                    android:layout_height="50dp" android:id="@+id/button"
-                    app:icon="@drawable/error_rounded_corner_view"
-                    app:backgroundTint="@color/whiteTintColor"
-                    style="?android:attr/borderlessButtonStyle"
-                    app:iconTint="@color/loggedLayoutSecondColor"
+                    android:layout_height="50dp"
+                    android:id="@+id/button"
+                    app:src="@drawable/menu_icon"
                     android:layout_weight="1"
-            />
+                    app:backgroundTint="@color/whiteTintColor"
+                    android:src="@drawable/menu_icon"/>
             <EditText
                     android:layout_width="0dp"
                     android:layout_height="50dp"
