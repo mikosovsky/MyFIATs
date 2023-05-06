@@ -14,12 +14,14 @@
     <color name="goBackButtonBackgroundColor">#32ADE6</color>
     <color name="loginButtonBackgroundColor">#34C759</color>
     <color name="createAccountButtonBackgroundColor">#34C759</color>
-    <color name="loggedLayoutSecondColor">#F2F2F7</color>
+    <color name="loggedLayoutSecondColor">#D1D1D6</color>
+    <color name="loggedLayoutThirdColor">#F2F2F7</color>
     <color name="currencyLayoutSecondColor">#D1D1D6</color>
     <color name="goDownColor">#FF3B30</color>
     <color name="goUpColor">#34C759</color>
     <color name="blackTintColor">#000000</color>
     <color name="whiteTintColor">#FFFFFF</color>
     <color name="hintColor">#4DFFFFFF</color>
+    <color name="loggedHintColor">#4D000000</color>
     <color name="errorColor">#FF3B30</color>
 </resources>
