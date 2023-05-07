@@ -25,7 +25,6 @@
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:id="@+id/button"
-                    app:src="@drawable/menu_icon"
                     android:layout_weight="1"
                     app:backgroundTint="@color/whiteTintColor"
                     android:src="@drawable/menu_icon"/>
@@ -47,8 +46,8 @@
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:id="@+id/imageButton"
-                    android:background="?android:attr/actionModeWebSearchDrawable"
-                    app:backgroundTint="@color/loggedLayoutSecondColor"
+                    android:src="@drawable/magnifier_icon"
+                    app:backgroundTint="@color/whiteTintColor"
                     android:layout_weight="1"
             />
         </LinearLayout>
