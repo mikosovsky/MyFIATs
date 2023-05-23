@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CurrencyInfoLayout">
+        <attr name="fullNameCurrencyText" format="string"/>
+        <attr name="shortNameCurrencyText" format="string"/>
+        <attr name="exchangeRateText" format="string"/>
+        <attr name="percentText" format="string"/>
+        <attr name="upOrDownColor" format="color"/>
+    </declare-styleable>
+</resources>

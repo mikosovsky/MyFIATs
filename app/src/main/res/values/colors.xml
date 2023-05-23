@@ -24,4 +24,5 @@
     <color name="hintColor">#4DFFFFFF</color>
     <color name="loggedHintColor">#4D000000</color>
     <color name="errorColor">#FF3B30</color>
+    <color name="currencyShortNameColor">#80000000</color>
 </resources>
