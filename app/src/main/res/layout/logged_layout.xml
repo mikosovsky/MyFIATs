@@ -51,6 +51,10 @@
                     android:layout_weight="1"
             />
         </LinearLayout>
+        <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+        />
         <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
