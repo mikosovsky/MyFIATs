@@ -3,6 +3,7 @@ package com.example.myfiats
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.google.gson.Gson
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
@@ -32,6 +33,10 @@ class LoggedLayoutActivity : AppCompatActivity() {
             if(connection.responseCode == 200) {
                 val inputStream = connection.inputStream
                 val inputStreamReader = InputStreamReader(inputStream, "UTF-8")
+                val dataModel = Gson().fromJson(inputStreamReader, DataModel::class.java)
+                
+                inputStreamReader.close()
+                inputStream.close()
             }
         }
     }
