@@ -63,16 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:id="@+id/currenciesLayout">
-                <com.example.myfiats.CurrencyInfoLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        app:fullNameCurrencyText="Brytyjski funt szterling"
-                        app:shortNameCurrencyText="GBP"
-                        app:upOrDownColor="@color/goUpColor"
-                        app:percentText="0.6%"
-                        app:exchangeRateText="5.17 PLN"
-                />
+                    android:id="@+id/currenciesLinearLayout">
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
