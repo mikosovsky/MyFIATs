@@ -69,9 +69,9 @@ class LoggedLayoutActivity : AppCompatActivity() {
                             val exchangeRateFloat = 1 / currency.value
                             var exchangeRateString = ""
                             if (exchangeRateFloat > 0.01) {
-                                exchangeRateString = String.format("%.2f PLN", exchangeRateFloat)
+                                exchangeRateString = String.format("%.2f " + baseCurrency, exchangeRateFloat)
                             } else {
-                                exchangeRateString = String.format("%.4f PLN", exchangeRateFloat)
+                                exchangeRateString = String.format("%.4f " + baseCurrency, exchangeRateFloat)
                             }
                             createCurrencyInfoLayout("", currency.key, exchangeRateString)
                         }

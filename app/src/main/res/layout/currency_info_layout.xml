@@ -61,4 +61,8 @@
                 android:textColor="@color/goDownColor"
         />
     </LinearLayout>
+    <Space
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+    />
 </LinearLayout>
