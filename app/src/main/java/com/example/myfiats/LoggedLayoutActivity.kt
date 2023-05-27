@@ -21,6 +21,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
     private lateinit var currencyApiKeyString: String
     private val baseUrlString = "https://v6.exchangerate-api.com/v6/"
     private val baseCurrency = "PLN"
+    private lateinit var dataModel: DataModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.logged_layout)
@@ -51,8 +52,8 @@ class LoggedLayoutActivity : AppCompatActivity() {
             if(connection.responseCode == 200) {
                 val inputStream = connection.inputStream
                 val inputStreamReader = InputStreamReader(inputStream, "UTF-8")
-                val dataModel = Gson().fromJson(inputStreamReader, DataModel::class.java)
-                updateUI(dataModel)
+                dataModel = Gson().fromJson(inputStreamReader, DataModel::class.java)
+                updateUI()
                 inputStreamReader.close()
                 inputStream.close()
             }
@@ -60,7 +61,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
     }
 
     // Function is responsible for update UI with all currencies data (add all CurrencyInfoLayout)
-    private fun updateUI(dataModel: DataModel) {
+    private fun updateUI() {
         runOnUiThread {
             kotlin.run {
                 if (dataModel.result == "success") {
