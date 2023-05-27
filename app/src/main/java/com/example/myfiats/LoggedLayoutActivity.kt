@@ -3,6 +3,7 @@ package com.example.myfiats
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings.Global
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.gson.Gson
+import kotlinx.coroutines.*
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
@@ -17,6 +19,7 @@ import java.net.URL
 class LoggedLayoutActivity : AppCompatActivity() {
     // Views
     private lateinit var currenciesLinearLayout: LinearLayout
+
     // Rest API data
     private lateinit var currencyApiKeyString: String
     private val baseUrlString = "https://v6.exchangerate-api.com/v6/"
@@ -26,7 +29,12 @@ class LoggedLayoutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.logged_layout)
         setUp()
-        fetchCurrencyData().start()
+        GlobalScope.launch(Dispatchers.IO) {
+            val dataModel = async { fetchCurrencyData() }
+            withContext(Dispatchers.Main) {
+                updateUI(dataModel.await())
+            }
+        }
     }
 
     // Function is setting up all things
@@ -42,41 +50,36 @@ class LoggedLayoutActivity : AppCompatActivity() {
     }
 
     // Function is responsible for get data from Rest API
-    private fun fetchCurrencyData(): Thread {
+    private suspend fun fetchCurrencyData(): DataModel {
         Log.d("REST API", "fetchCurrencyData()")
-        return Thread {
-            val urlString = baseUrlString + currencyApiKeyString + "/latest/" + baseCurrency
-            val url = URL(urlString)
-            val connection = url.openConnection() as HttpURLConnection
-            Log.d("REST API",connection.responseCode.toString())
-            if(connection.responseCode == 200) {
-                val inputStream = connection.inputStream
-                val inputStreamReader = InputStreamReader(inputStream, "UTF-8")
-                dataModel = Gson().fromJson(inputStreamReader, DataModel::class.java)
-                updateUI()
-                inputStreamReader.close()
-                inputStream.close()
-            }
+        val urlString = baseUrlString + currencyApiKeyString + "/latest/" + baseCurrency
+        val url = URL(urlString)
+        val connection = url.openConnection() as HttpURLConnection
+        Log.d("REST API", connection.responseCode.toString())
+        if (connection.responseCode == 200) {
+            val inputStream = connection.inputStream
+            val inputStreamReader = InputStreamReader(inputStream, "UTF-8")
+            dataModel = Gson().fromJson(inputStreamReader, DataModel::class.java)
+            inputStreamReader.close()
+            inputStream.close()
         }
+        return dataModel
     }
 
     // Function is responsible for update UI with all currencies data (add all CurrencyInfoLayout)
-    private fun updateUI() {
-        runOnUiThread {
-            kotlin.run {
-                if (dataModel.result == "success") {
-                    for (currency in dataModel.conversion_rates) {
-                        if (currency.key != "PLN") {
-                            val exchangeRateFloat = 1 / currency.value
-                            var exchangeRateString = ""
-                            if (exchangeRateFloat > 0.01) {
-                                exchangeRateString = String.format("%.2f " + baseCurrency, exchangeRateFloat)
-                            } else {
-                                exchangeRateString = String.format("%.4f " + baseCurrency, exchangeRateFloat)
-                            }
-                            createCurrencyInfoLayout("", currency.key, exchangeRateString)
-                        }
+    private fun updateUI(dataModel: DataModel) {
+
+        if (dataModel.result == "success") {
+            for (currency in dataModel.conversion_rates) {
+                if (currency.key != "PLN") {
+                    val exchangeRateFloat = 1 / currency.value
+                    var exchangeRateString = ""
+                    if (exchangeRateFloat > 0.01) {
+                        exchangeRateString = String.format("%.2f " + baseCurrency, exchangeRateFloat)
+                    } else {
+                        exchangeRateString = String.format("%.4f " + baseCurrency, exchangeRateFloat)
                     }
+                    createCurrencyInfoLayout("", currency.key, exchangeRateString)
                 }
             }
         }
@@ -84,7 +87,8 @@ class LoggedLayoutActivity : AppCompatActivity() {
 
     // Function is responsible for create CurrencyInfoLayout for one currency
     private fun createCurrencyInfoLayout(fullNameString: String, shortNameString: String, exchangeRateString: String) {
-        val currencyInfoLayout = LayoutInflater.from(this).inflate(R.layout.currency_info_layout,currenciesLinearLayout,false)
+        val currencyInfoLayout =
+            LayoutInflater.from(this).inflate(R.layout.currency_info_layout, currenciesLinearLayout, false)
         val fullNameCurrencyTextView = currencyInfoLayout.findViewById<TextView>(R.id.fullNameCurrencyTextView)
         fullNameCurrencyTextView.text = fullNameString
         val shortnameCurrencyTextView = currencyInfoLayout.findViewById<TextView>(R.id.shortNameCurrencyTextView)
@@ -102,7 +106,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
     // Function is responsible for changing view to CurrencyLayout
     private fun currencyInfoLayoutSetOnClick(currencyInfoLayout: View) {
         currencyInfoLayout.setOnClickListener {
-            val currencyLayoutActivityIntent = Intent(applicationContext,CurrencyLayoutActivity::class.java)
+            val currencyLayoutActivityIntent = Intent(applicationContext, CurrencyLayoutActivity::class.java)
             val shortNameCurrencyTextView = currencyInfoLayout.findViewById<TextView>(R.id.shortNameCurrencyTextView)
             val shortNameCurrencyString = shortNameCurrencyTextView.text.toString()
             currencyLayoutActivityIntent.putExtra("shortNameCurrency", shortNameCurrencyString)
