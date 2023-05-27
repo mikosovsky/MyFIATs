@@ -5,6 +5,7 @@ import android.os.Bundle
 import java.net.URL
 
 class LoggedLayoutActivity : AppCompatActivity() {
+    private val currencyApiKeyString = getString(R.string.currencyApiKey)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.logged_layout)
