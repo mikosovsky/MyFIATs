@@ -3,7 +3,6 @@ package com.example.myfiats
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings.Global
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,15 +23,28 @@ class LoggedLayoutActivity : AppCompatActivity() {
     private lateinit var currencyApiKeyString: String
     private val baseUrlString = "https://v6.exchangerate-api.com/v6/"
     private val baseCurrency = "PLN"
-    private lateinit var dataModel: DataModel
+    private lateinit var allCurrenciesDataModel: AllCurrenciesDataModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.logged_layout)
         setUp()
         GlobalScope.launch(Dispatchers.IO) {
-            val dataModel = async { fetchCurrencyData() }
-            withContext(Dispatchers.Main) {
-                updateUI(dataModel.await())
+            val dataModel = async { fetchCurrenciesData() }
+            Log.d("REST API",dataModel.await().conversion_rates.size.toString())
+            for (currency in dataModel.await().conversion_rates) {
+                if (currency.key != baseCurrency) {
+                    val currencyDataModel = async { fetchCurrencyDetails(currency.key) }
+                    if (currencyDataModel.await() == null) {
+                        withContext(Dispatchers.Main) {
+                            updateUI(currency)
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            val toSendCurrencyDataModel = currencyDataModel.await() as CurrencyDataModel
+                            updateUI(toSendCurrencyDataModel)
+                        }
+                    }
+                }
             }
         }
     }
@@ -50,7 +62,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
     }
 
     // Function is responsible for get data from Rest API
-    private suspend fun fetchCurrencyData(): DataModel {
+    private suspend fun fetchCurrenciesData(): AllCurrenciesDataModel {
         Log.d("REST API", "fetchCurrencyData()")
         val urlString = baseUrlString + currencyApiKeyString + "/latest/" + baseCurrency
         val url = URL(urlString)
@@ -59,30 +71,38 @@ class LoggedLayoutActivity : AppCompatActivity() {
         if (connection.responseCode == 200) {
             val inputStream = connection.inputStream
             val inputStreamReader = InputStreamReader(inputStream, "UTF-8")
-            dataModel = Gson().fromJson(inputStreamReader, DataModel::class.java)
+            allCurrenciesDataModel = Gson().fromJson(inputStreamReader, AllCurrenciesDataModel::class.java)
             inputStreamReader.close()
             inputStream.close()
         }
-        return dataModel
+        return allCurrenciesDataModel
     }
 
     // Function is responsible for update UI with all currencies data (add all CurrencyInfoLayout)
-    private fun updateUI(dataModel: DataModel) {
+    private fun updateUI(currency: Map.Entry<String, Float>) {
 
-        if (dataModel.result == "success") {
-            for (currency in dataModel.conversion_rates) {
-                if (currency.key != "PLN") {
-                    val exchangeRateFloat = 1 / currency.value
-                    var exchangeRateString = ""
-                    if (exchangeRateFloat > 0.01) {
-                        exchangeRateString = String.format("%.2f " + baseCurrency, exchangeRateFloat)
-                    } else {
-                        exchangeRateString = String.format("%.4f " + baseCurrency, exchangeRateFloat)
-                    }
-                    createCurrencyInfoLayout("", currency.key, exchangeRateString)
-                }
+            val exchangeRateFloat = 1 / currency.value
+            var exchangeRateString = ""
+            if (exchangeRateFloat > 0.01) {
+                exchangeRateString = String.format("%.2f " + baseCurrency, exchangeRateFloat)
+            } else {
+                exchangeRateString = String.format("%.4f " + baseCurrency, exchangeRateFloat)
             }
-        }
+            createCurrencyInfoLayout("", currency.key, exchangeRateString)
+
+    }
+
+    private fun updateUI(currencyDataModel: CurrencyDataModel) {
+
+            val exchangeRateFloat = 1 / currencyDataModel.conversion_rate
+            var exchangeRateString = ""
+            if (exchangeRateFloat > 0.01) {
+                exchangeRateString = String.format("%.2f " + baseCurrency, exchangeRateFloat)
+            } else {
+                exchangeRateString = String.format("%.4f " + baseCurrency, exchangeRateFloat)
+            }
+            createCurrencyInfoLayout(currencyDataModel.target_data.currency_name, currencyDataModel.target_code, exchangeRateString)
+
     }
 
     // Function is responsible for create CurrencyInfoLayout for one currency
@@ -112,5 +132,23 @@ class LoggedLayoutActivity : AppCompatActivity() {
             currencyLayoutActivityIntent.putExtra("shortNameCurrency", shortNameCurrencyString)
             startActivity(currencyLayoutActivityIntent)
         }
+    }
+
+    // Function is responsible for download details about one currency
+    private suspend fun fetchCurrencyDetails(targetCurrency: String): CurrencyDataModel?{
+        Log.d("REST API", "fetchCurrencyDetails()")
+        var currencyDataModel: CurrencyDataModel? = null
+        val urlString = baseUrlString + currencyApiKeyString + "/enriched/" + baseCurrency + "/" + targetCurrency
+        val url = URL(urlString)
+        val connection = url.openConnection() as HttpURLConnection
+        Log.d("REST API", connection.responseCode.toString())
+        if (connection.responseCode == 200) {
+            val inputStream = connection.inputStream
+            val inputStreamReader = InputStreamReader(inputStream, "UTF-8")
+            currencyDataModel = Gson().fromJson(inputStreamReader, CurrencyDataModel::class.java)
+            inputStreamReader.close()
+            inputStream.close()
+        }
+        return currencyDataModel
     }
 }

@@ -10,7 +10,6 @@
             android:layout_height="50dp"
             android:src="@drawable/magnifier_icon"
             android:id="@+id/flagImageView"
-            android:layout_weight="1"
     />
     <LinearLayout
             android:orientation="vertical"
@@ -23,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
                 android:id="@+id/fullNameCurrencyTextView"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="@color/blackTintColor"
         />
         <TextView
