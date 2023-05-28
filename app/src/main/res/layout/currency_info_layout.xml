@@ -11,6 +11,9 @@
             android:src="@drawable/magnifier_icon"
             android:id="@+id/flagImageView"
     />
+    <Space android:layout_width="10dp"
+           android:layout_height="match_parent"
+    />
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
@@ -20,17 +23,17 @@
         <TextView
                 android:text="Brytyjski funt szterling"
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
+                android:layout_height="18dp"
                 android:id="@+id/fullNameCurrencyTextView"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textColor="@color/blackTintColor"
         />
         <TextView
                 android:text="GBP"
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
+                android:layout_height="32dp"
                 android:id="@+id/shortNameCurrencyTextView"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textColor="@color/currencyShortNameColor"
         />
     </LinearLayout>
