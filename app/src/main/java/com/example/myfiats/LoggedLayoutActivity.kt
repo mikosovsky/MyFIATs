@@ -1,6 +1,8 @@
 package com.example.myfiats
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -30,7 +32,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
         setUp()
         GlobalScope.launch(Dispatchers.IO) {
             val dataModel = async { fetchCurrenciesData() }
-            Log.d("REST API",dataModel.await().conversion_rates.size.toString())
+            Log.d("REST API", dataModel.await().conversion_rates.size.toString())
             for (currency in dataModel.await().conversion_rates) {
                 if (currency.key != baseCurrency) {
                     val currencyDataModel = async { fetchCurrencyDetails(currency.key) }
@@ -39,9 +41,12 @@ class LoggedLayoutActivity : AppCompatActivity() {
                             updateUI(currency)
                         }
                     } else {
+                        val toSendCurrencyDataModel = currencyDataModel.await() as CurrencyDataModel
+                        val readyDataToUseModel = async { downloadImageByteArrayAndChangeObjectOfData(toSendCurrencyDataModel) }
+
                         withContext(Dispatchers.Main) {
-                            val toSendCurrencyDataModel = currencyDataModel.await() as CurrencyDataModel
-                            updateUI(toSendCurrencyDataModel)
+                            updateUI(readyDataToUseModel.await())
+
                         }
                     }
                 }
@@ -63,11 +68,9 @@ class LoggedLayoutActivity : AppCompatActivity() {
 
     // Function is responsible for get data from Rest API
     private suspend fun fetchCurrenciesData(): AllCurrenciesDataModel {
-        Log.d("REST API", "fetchCurrencyData()")
         val urlString = baseUrlString + currencyApiKeyString + "/latest/" + baseCurrency
         val url = URL(urlString)
         val connection = url.openConnection() as HttpURLConnection
-        Log.d("REST API", connection.responseCode.toString())
         if (connection.responseCode == 200) {
             val inputStream = connection.inputStream
             val inputStreamReader = InputStreamReader(inputStream, "UTF-8")
@@ -81,27 +84,58 @@ class LoggedLayoutActivity : AppCompatActivity() {
     // Function is responsible for update UI with all currencies data (add all CurrencyInfoLayout)
     private fun updateUI(currency: Map.Entry<String, Float>) {
 
-            val exchangeRateFloat = 1 / currency.value
-            var exchangeRateString = ""
-            if (exchangeRateFloat > 0.01) {
-                exchangeRateString = String.format("%.2f " + baseCurrency, exchangeRateFloat)
-            } else {
-                exchangeRateString = String.format("%.4f " + baseCurrency, exchangeRateFloat)
-            }
-            createCurrencyInfoLayout("", currency.key, exchangeRateString)
+        val exchangeRateFloat = 1 / currency.value
+        var exchangeRateString = ""
+        if (exchangeRateFloat > 0.01) {
+            exchangeRateString = String.format("%.2f " + baseCurrency, exchangeRateFloat)
+        } else {
+            exchangeRateString = String.format("%.4f " + baseCurrency, exchangeRateFloat)
+        }
+        createCurrencyInfoLayout("", currency.key, exchangeRateString)
 
     }
 
     private fun updateUI(currencyDataModel: CurrencyDataModel) {
 
-            val exchangeRateFloat = 1 / currencyDataModel.conversion_rate
-            var exchangeRateString = ""
-            if (exchangeRateFloat > 0.01) {
-                exchangeRateString = String.format("%.2f " + baseCurrency, exchangeRateFloat)
-            } else {
-                exchangeRateString = String.format("%.4f " + baseCurrency, exchangeRateFloat)
-            }
-            createCurrencyInfoLayout(currencyDataModel.target_data.currency_name, currencyDataModel.target_code, exchangeRateString)
+        val exchangeRateFloat = 1 / currencyDataModel.conversion_rate
+        var exchangeRateString = ""
+        if (exchangeRateFloat > 0.01) {
+            exchangeRateString = String.format("%.2f " + baseCurrency, exchangeRateFloat)
+        } else {
+            exchangeRateString = String.format("%.4f " + baseCurrency, exchangeRateFloat)
+        }
+        createCurrencyInfoLayout(
+            currencyDataModel.target_data.currency_name,
+            currencyDataModel.target_code,
+            exchangeRateString
+        )
+
+    }
+
+    private fun updateUI(readyDataToUseModel: ReadyDataToUseModel) {
+
+        val exchangeRateFloat = 1 / readyDataToUseModel.exchangeRate
+        var exchangeRateString = ""
+        if (exchangeRateFloat > 0.01) {
+            exchangeRateString = String.format("%.2f " + baseCurrency, exchangeRateFloat)
+        } else {
+            exchangeRateString = String.format("%.4f " + baseCurrency, exchangeRateFloat)
+        }
+        if (readyDataToUseModel.image != null) {
+            val image = readyDataToUseModel.image as Bitmap
+        createCurrencyInfoLayout(
+            readyDataToUseModel.fullNameCurrency,
+            readyDataToUseModel.shortNameCurrency,
+            exchangeRateString,
+            image
+        )
+        } else {
+            createCurrencyInfoLayout(
+                readyDataToUseModel.fullNameCurrency,
+                readyDataToUseModel.shortNameCurrency,
+                exchangeRateString
+            )
+        }
 
     }
 
@@ -123,6 +157,28 @@ class LoggedLayoutActivity : AppCompatActivity() {
         currenciesLinearLayout.addView(currencyInfoLayout)
     }
 
+    private fun createCurrencyInfoLayout(
+        fullNameString: String,
+        shortNameString: String,
+        exchangeRateString: String,
+        bitmap: Bitmap
+    ) {
+        val currencyInfoLayout =
+            LayoutInflater.from(this).inflate(R.layout.currency_info_layout, currenciesLinearLayout, false)
+        val fullNameCurrencyTextView = currencyInfoLayout.findViewById<TextView>(R.id.fullNameCurrencyTextView)
+        fullNameCurrencyTextView.text = fullNameString
+        val shortnameCurrencyTextView = currencyInfoLayout.findViewById<TextView>(R.id.shortNameCurrencyTextView)
+        shortnameCurrencyTextView.text = shortNameString
+        val exchangeRateTextView = currencyInfoLayout.findViewById<TextView>(R.id.exchangeRateTextView)
+        exchangeRateTextView.text = exchangeRateString
+        val percentTextView = currencyInfoLayout.findViewById<TextView>(R.id.percentTextView)
+        percentTextView.visibility = View.INVISIBLE
+        val flagImageView = currencyInfoLayout.findViewById<ImageView>(R.id.flagImageView)
+        flagImageView.setImageBitmap(bitmap)
+        currencyInfoLayoutSetOnClick(currencyInfoLayout)
+        currenciesLinearLayout.addView(currencyInfoLayout)
+    }
+
     // Function is responsible for changing view to CurrencyLayout
     private fun currencyInfoLayoutSetOnClick(currencyInfoLayout: View) {
         currencyInfoLayout.setOnClickListener {
@@ -135,7 +191,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
     }
 
     // Function is responsible for download details about one currency
-    private suspend fun fetchCurrencyDetails(targetCurrency: String): CurrencyDataModel?{
+    private suspend fun fetchCurrencyDetails(targetCurrency: String): CurrencyDataModel? {
         Log.d("REST API", "fetchCurrencyDetails()")
         var currencyDataModel: CurrencyDataModel? = null
         val urlString = baseUrlString + currencyApiKeyString + "/enriched/" + baseCurrency + "/" + targetCurrency
@@ -150,5 +206,19 @@ class LoggedLayoutActivity : AppCompatActivity() {
             inputStream.close()
         }
         return currencyDataModel
+    }
+
+    private suspend fun downloadImageByteArrayAndChangeObjectOfData(currencyDataModel: CurrencyDataModel): ReadyDataToUseModel {
+        val url = URL(currencyDataModel.target_data.flag_url)
+        var bitmap: Bitmap? = null
+        val connection = url.openConnection() as HttpURLConnection
+        if (connection.responseCode == 200) {
+            val imageData = url.readBytes()
+            bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
+        }
+        val fullNameCurrency = currencyDataModel.target_data.currency_name
+        val shortNameCurrency = currencyDataModel.target_code
+        val exchangeRate = currencyDataModel.conversion_rate
+        return ReadyDataToUseModel(fullNameCurrency, shortNameCurrency, exchangeRate, bitmap)
     }
 }
