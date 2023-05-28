@@ -213,8 +213,8 @@ class LoggedLayoutActivity : AppCompatActivity() {
         var bitmap: Bitmap? = null
         val connection = url.openConnection() as HttpURLConnection
         if (connection.responseCode == 200) {
-            val imageData = url.readBytes()
-            bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
+            val inputStream = connection.inputStream
+            bitmap = BitmapFactory.decodeStream(inputStream)
         }
         val fullNameCurrency = currencyDataModel.target_data.currency_name
         val shortNameCurrency = currencyDataModel.target_code
