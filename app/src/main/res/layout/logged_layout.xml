@@ -27,7 +27,8 @@
                     android:id="@+id/button"
                     android:layout_weight="1"
                     app:backgroundTint="@color/whiteTintColor"
-                    android:src="@drawable/menu_icon"/>
+                    android:src="@drawable/menu_icon"
+            />
             <EditText
                     android:layout_width="0dp"
                     android:layout_height="50dp"

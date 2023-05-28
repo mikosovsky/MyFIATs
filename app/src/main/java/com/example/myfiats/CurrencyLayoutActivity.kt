@@ -7,5 +7,10 @@ class CurrencyLayoutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.currency_layout)
+        setUp()
+    }
+
+    private fun setUp(){
+        supportActionBar?.hide()
     }
 }
