@@ -32,7 +32,6 @@ class LoggedLayoutActivity : AppCompatActivity() {
         setUp()
         GlobalScope.launch(Dispatchers.IO) {
             val dataModel = async { fetchCurrenciesData() }
-            Log.d("REST API", dataModel.await().conversion_rates.size.toString())
             for (currency in dataModel.await().conversion_rates) {
                 if (currency.key != baseCurrency) {
                     val currencyDataModel = async { fetchCurrencyDetails(currency.key) }
@@ -51,6 +50,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
                     }
                 }
             }
+            Log.d("REST API", "END OF DOWNLOADING DATA")
         }
     }
 
@@ -71,6 +71,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
         val urlString = baseUrlString + currencyApiKeyString + "/latest/" + baseCurrency
         val url = URL(urlString)
         val connection = url.openConnection() as HttpURLConnection
+        Log.d("REST API", connection.responseCode.toString())
         if (connection.responseCode == 200) {
             val inputStream = connection.inputStream
             val inputStreamReader = InputStreamReader(inputStream, "UTF-8")
@@ -192,12 +193,10 @@ class LoggedLayoutActivity : AppCompatActivity() {
 
     // Function is responsible for download details about one currency
     private suspend fun fetchCurrencyDetails(targetCurrency: String): CurrencyDataModel? {
-        Log.d("REST API", "fetchCurrencyDetails()")
         var currencyDataModel: CurrencyDataModel? = null
         val urlString = baseUrlString + currencyApiKeyString + "/enriched/" + baseCurrency + "/" + targetCurrency
         val url = URL(urlString)
         val connection = url.openConnection() as HttpURLConnection
-        Log.d("REST API", connection.responseCode.toString())
         if (connection.responseCode == 200) {
             val inputStream = connection.inputStream
             val inputStreamReader = InputStreamReader(inputStream, "UTF-8")

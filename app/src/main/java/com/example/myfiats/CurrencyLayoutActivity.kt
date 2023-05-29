@@ -38,22 +38,14 @@ class CurrencyLayoutActivity : AppCompatActivity() {
 
     private fun setUpViews(){
         goBackImageButton = findViewById(R.id.goBackImageButton)
-        Log.d("VIEW","goBackButton")
         currencyTextView = findViewById(R.id.currencyTextView)
-        Log.d("VIEW","currencyTextView")
         starImageButton = findViewById(R.id.starImageButton)
-        Log.d("VIEW","starButton")
         lineChart = findViewById(R.id.lineChart)
         yearButton = findViewById(R.id.yearButton)
-        Log.d("VIEW","yearButton")
         monthButton = findViewById(R.id.monthButton)
-        Log.d("VIEW","monthButton")
         weekButton = findViewById(R.id.weekButton)
-        Log.d("VIEW","weekButton")
         dayButton = findViewById(R.id.dayButton)
-        Log.d("VIEW","dayButton")
         currentExchangeRateTextView = findViewById(R.id.currentExchangeRateTextView)
-        Log.d("VIEW","currentExchangeRateTextView")
         currencyTextView.text = currencyString
     }
 
