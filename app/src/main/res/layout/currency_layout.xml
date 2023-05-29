@@ -28,7 +28,7 @@
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     app:srcCompat="@drawable/left_arrow_icon"
-                    android:id="@+id/goBackButton"
+                    android:id="@+id/goBackImageButton"
                     app:backgroundTint="@color/whiteTintColor"
                     android:layout_weight="1"
             />
@@ -47,7 +47,7 @@
                     android:layout_height="50dp"
                     app:srcCompat="@drawable/empty_star_icon"
                     app:backgroundTint="@color/whiteTintColor"
-                    android:id="@+id/starButton"
+                    android:id="@+id/starImageButton"
                     android:layout_weight="1"
             />
         </LinearLayout>
@@ -65,74 +65,75 @@
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
         />
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:weightSum="11"
-    >
-        <Button
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:id="@+id/yearButton"
-                android:background="@drawable/rounded_corner_view"
-                app:backgroundTint="@color/currencyLayoutSecondColor"
-                android:textColor="@color/blackTintColor"
-                android:textAllCaps="false"
-                android:text="year"
-                android:textSize="10dp"
-        />
-        <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-        />
-        <Button
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:id="@+id/monthButton"
-                android:textColor="@color/blackTintColor"
-                android:background="@drawable/rounded_corner_view"
-                app:backgroundTint="@color/currencyLayoutSecondColor"
-                android:textAllCaps="false"
-                android:text="month"
-                android:textSize="10dp"
-        />
-        <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-        />
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:id="@+id/weekButton"
-            android:textColor="@color/blackTintColor"
-            android:background="@drawable/rounded_corner_view"
-            app:backgroundTint="@color/currencyLayoutSecondColor"
-            android:textAllCaps="false"
-            android:text="week"
-            android:textSize="10dp"
-    />
-        <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-        /><Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:id="@+id/dayButton"
-            android:background="@drawable/rounded_corner_view"
-            app:backgroundTint="@color/chosenChartColor"
-            android:textAllCaps="false"
-            android:text="day"
-            android:textSize="10dp"
-    />
-    </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:weightSum="11"
+        >
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:id="@+id/yearButton"
+                    android:background="@drawable/rounded_corner_view"
+                    app:backgroundTint="@color/currencyLayoutSecondColor"
+                    android:textColor="@color/blackTintColor"
+                    android:textAllCaps="false"
+                    android:text="year"
+                    android:textSize="10dp"
+            />
+            <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+            />
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:id="@+id/monthButton"
+                    android:textColor="@color/blackTintColor"
+                    android:background="@drawable/rounded_corner_view"
+                    app:backgroundTint="@color/currencyLayoutSecondColor"
+                    android:textAllCaps="false"
+                    android:text="month"
+                    android:textSize="10dp"
+            />
+            <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+            />
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:id="@+id/weekButton"
+                    android:textColor="@color/blackTintColor"
+                    android:background="@drawable/rounded_corner_view"
+                    app:backgroundTint="@color/currencyLayoutSecondColor"
+                    android:textAllCaps="false"
+                    android:text="week"
+                    android:textSize="10dp"
+            />
+            <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+            />
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:id="@+id/dayButton"
+                    android:background="@drawable/rounded_corner_view"
+                    app:backgroundTint="@color/chosenChartColor"
+                    android:textAllCaps="false"
+                    android:text="day"
+                    android:textSize="10dp"
+            />
+        </LinearLayout>
         <Space
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
