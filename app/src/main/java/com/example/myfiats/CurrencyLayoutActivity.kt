@@ -1,5 +1,6 @@
 package com.example.myfiats
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +20,7 @@ class CurrencyLayoutActivity : AppCompatActivity() {
     private lateinit var weekButton: Button
     private lateinit var dayButton: Button
     private lateinit var currentExchangeRateTextView: TextView
+    private lateinit var loggedLayoutActivityIntent: Intent
     // Data
     private var bundle: Bundle? = null
     private lateinit var currencyString: String
@@ -34,6 +36,7 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         supportActionBar?.hide()
         getDataFromPreviousView()
         setUpViews()
+        goBackImageButtonOnClick()
     }
 
     private fun setUpViews(){
@@ -46,6 +49,7 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         weekButton = findViewById(R.id.weekButton)
         dayButton = findViewById(R.id.dayButton)
         currentExchangeRateTextView = findViewById(R.id.currentExchangeRateTextView)
+        loggedLayoutActivityIntent = Intent(this@CurrencyLayoutActivity, LoggedLayoutActivity::class.java)
         currencyTextView.text = currencyString
     }
 
@@ -57,6 +61,11 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         } else {
             currencyString = "PLN"
         }
+    }
 
+    private fun goBackImageButtonOnClick(){
+        goBackImageButton.setOnClickListener {
+            startActivity(loggedLayoutActivityIntent)
+        }
     }
 }

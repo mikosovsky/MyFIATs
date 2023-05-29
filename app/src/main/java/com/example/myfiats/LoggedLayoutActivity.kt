@@ -20,7 +20,7 @@ import java.net.URL
 class LoggedLayoutActivity : AppCompatActivity() {
     // Views
     private lateinit var currenciesLinearLayout: LinearLayout
-
+    private lateinit var currencyLayoutActivityIntent: Intent
     // Rest API data
     private lateinit var currencyApiKeyString: String
     private val baseUrlString = "https://v6.exchangerate-api.com/v6/"
@@ -64,6 +64,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
     // Function is responsible for setting up all views
     private fun setUpViews() {
         currenciesLinearLayout = findViewById(R.id.currenciesLinearLayout)
+        currencyLayoutActivityIntent = Intent(this@LoggedLayoutActivity, CurrencyLayoutActivity::class.java)
     }
 
     // Function is responsible for get data from Rest API
@@ -183,7 +184,6 @@ class LoggedLayoutActivity : AppCompatActivity() {
     // Function is responsible for changing view to CurrencyLayout
     private fun currencyInfoLayoutSetOnClick(currencyInfoLayout: View) {
         currencyInfoLayout.setOnClickListener {
-            val currencyLayoutActivityIntent = Intent(applicationContext, CurrencyLayoutActivity::class.java)
             val shortNameCurrencyTextView = currencyInfoLayout.findViewById<TextView>(R.id.shortNameCurrencyTextView)
             val shortNameCurrencyString = shortNameCurrencyTextView.text.toString()
             currencyLayoutActivityIntent.putExtra("shortNameCurrency", shortNameCurrencyString)
