@@ -8,6 +8,9 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import com.github.mikephil.charting.charts.LineChart
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.Calendar
 
 class CurrencyLayoutActivity : AppCompatActivity() {
     // Views
@@ -25,6 +28,7 @@ class CurrencyLayoutActivity : AppCompatActivity() {
     private var bundle: Bundle? = null
     private lateinit var currencyString: String
     private val baseCurrencyString = "PLN"
+    private val baseUrlString = "https://v6.exchangerate-api.com/v6/"
     private lateinit var emailString: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +41,7 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         getDataFromPreviousView()
         setUpViews()
         goBackImageButtonOnClick()
+        fetchHistoryData(7)
     }
 
     private fun setUpViews(){
@@ -65,7 +70,25 @@ class CurrencyLayoutActivity : AppCompatActivity() {
 
     private fun goBackImageButtonOnClick(){
         goBackImageButton.setOnClickListener {
-            startActivity(loggedLayoutActivityIntent)
+            finish()
         }
+    }
+
+    private fun fetchHistoryData(daysAgo: Int) {
+        val calendar = Calendar.getInstance()
+        val dayFormatter = SimpleDateFormat("dd")
+        val monthFormatter = SimpleDateFormat("MM")
+        val yearFormatter = SimpleDateFormat("yyyy")
+        calendar.add(Calendar.DATE,-daysAgo)
+        var dayString = dayFormatter.format(calendar.time)
+        var monthString = monthFormatter.format(calendar.time)
+        val yearString = yearFormatter.format(calendar.time)
+        val dayInt = dayString.toInt()
+        val monthInt = monthString.toInt()
+        dayString = dayInt.toString()
+        monthString = monthInt.toString()
+        Log.d("DATE",dayString)
+        Log.d("DATE",monthString)
+        Log.d("DATE",yearString)
     }
 }
