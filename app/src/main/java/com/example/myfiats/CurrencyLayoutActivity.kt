@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import com.github.mikephil.charting.charts.LineChart
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -42,6 +43,18 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.currency_layout)
         setUp()
+
+        GlobalScope.launch(Dispatchers.IO) {
+            for (daysAgo in 0..364) {
+                val historyDataMap = async { fetchHistoryData(daysAgo) }
+                Log.d("Historical data", historyDataMap.await().toString())
+                if (this@CurrencyLayoutActivity.isFinishing) {
+                    break
+                }
+            }
+//            Log.d("REST API", historyDataMap.await().toString())
+        }
+
     }
 
     private fun setUp(){
@@ -50,9 +63,7 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         setUpViews()
         goBackImageButtonOnClick()
         currencyApiKeyString = getString(R.string.currencyApiKey)
-        GlobalScope.launch(Dispatchers.IO) {
-            val historyDataMapa = async {fetchHistoryData()}
-        }
+
     }
 
     private fun setUpViews(){
@@ -85,9 +96,8 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun fetchHistoryData(): Map<String,Float> {
-        var historyDataMap = mapOf<String,Float>()
-        for (daysAgo in 0..364) {
+    private suspend fun fetchHistoryData(daysAgo: Int): Map<String,Float> {
+        val historyDataMap = mutableMapOf<String,Float>()
             val calendar = Calendar.getInstance()
             val dayFormatter = SimpleDateFormat("dd")
             val monthFormatter = SimpleDateFormat("MM")
@@ -105,16 +115,16 @@ class CurrencyLayoutActivity : AppCompatActivity() {
             val urlString = baseUrlString + currencyApiKeyString + "/history/" + baseCurrencyString + "/" + yearString + "/" + monthString + "/" + dayString
             val url = URL(urlString)
             val connection = url.openConnection() as HttpURLConnection
-            Log.d("REST API", connection.responseCode.toString())
             if (connection.responseCode == 200) {
                 val inputStream = connection.inputStream
                 val inputStreamReader = InputStreamReader(inputStream,"UTF-8")
                 // Have to create dataModel class ! ! !
-                
+                val allCurrenciesDataModel = Gson().fromJson(inputStreamReader, AllCurrenciesDataModel::class.java)
+                val exchangeRate = 1/allCurrenciesDataModel.conversion_rates[currencyString] as Float
+                historyDataMap[fullDateString] = exchangeRate
                 inputStreamReader.close()
                 inputStream.close()
             }
-        }
         return historyDataMap
     }
 }
