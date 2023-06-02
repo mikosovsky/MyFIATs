@@ -8,6 +8,13 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import com.github.mikephil.charting.charts.LineChart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.Calendar
@@ -29,6 +36,7 @@ class CurrencyLayoutActivity : AppCompatActivity() {
     private lateinit var currencyString: String
     private val baseCurrencyString = "PLN"
     private val baseUrlString = "https://v6.exchangerate-api.com/v6/"
+    private lateinit var currencyApiKeyString: String
     private lateinit var emailString: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +49,10 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         getDataFromPreviousView()
         setUpViews()
         goBackImageButtonOnClick()
-        fetchHistoryData(7)
+        currencyApiKeyString = getString(R.string.currencyApiKey)
+        GlobalScope.launch(Dispatchers.IO) {
+            val historyDataMapa = async {fetchHistoryData()}
+        }
     }
 
     private fun setUpViews(){
@@ -74,21 +85,36 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         }
     }
 
-    private fun fetchHistoryData(daysAgo: Int) {
-        val calendar = Calendar.getInstance()
-        val dayFormatter = SimpleDateFormat("dd")
-        val monthFormatter = SimpleDateFormat("MM")
-        val yearFormatter = SimpleDateFormat("yyyy")
-        calendar.add(Calendar.DATE,-daysAgo)
-        var dayString = dayFormatter.format(calendar.time)
-        var monthString = monthFormatter.format(calendar.time)
-        val yearString = yearFormatter.format(calendar.time)
-        val dayInt = dayString.toInt()
-        val monthInt = monthString.toInt()
-        dayString = dayInt.toString()
-        monthString = monthInt.toString()
-        Log.d("DATE",dayString)
-        Log.d("DATE",monthString)
-        Log.d("DATE",yearString)
+    private suspend fun fetchHistoryData(): Map<String,Float> {
+        var historyDataMap = mapOf<String,Float>()
+        for (daysAgo in 0..364) {
+            val calendar = Calendar.getInstance()
+            val dayFormatter = SimpleDateFormat("dd")
+            val monthFormatter = SimpleDateFormat("MM")
+            val yearFormatter = SimpleDateFormat("yyyy")
+            val fullDateFormatter = SimpleDateFormat("dd-MM-yyyy")
+            calendar.add(Calendar.DATE, -daysAgo)
+            var dayString = dayFormatter.format(calendar.time)
+            var monthString = monthFormatter.format(calendar.time)
+            val yearString = yearFormatter.format(calendar.time)
+            val fullDateString = fullDateFormatter.format(calendar.time)
+            val dayInt = dayString.toInt()
+            val monthInt = monthString.toInt()
+            dayString = dayInt.toString()
+            monthString = monthInt.toString()
+            val urlString = baseUrlString + currencyApiKeyString + "/history/" + baseCurrencyString + "/" + yearString + "/" + monthString + "/" + dayString
+            val url = URL(urlString)
+            val connection = url.openConnection() as HttpURLConnection
+            Log.d("REST API", connection.responseCode.toString())
+            if (connection.responseCode == 200) {
+                val inputStream = connection.inputStream
+                val inputStreamReader = InputStreamReader(inputStream,"UTF-8")
+                // Have to create dataModel class ! ! !
+                
+                inputStreamReader.close()
+                inputStream.close()
+            }
+        }
+        return historyDataMap
     }
 }
