@@ -96,8 +96,8 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun fetchHistoryData(daysAgo: Int): Map<String,Float> {
-        val historyDataMap = mutableMapOf<String,Float>()
+    private suspend fun fetchHistoryData(daysAgo: Int): Pair<String,Float> {
+        lateinit var historyDataMap: Pair<String, Float>
             val calendar = Calendar.getInstance()
             val dayFormatter = SimpleDateFormat("dd")
             val monthFormatter = SimpleDateFormat("MM")
@@ -121,7 +121,7 @@ class CurrencyLayoutActivity : AppCompatActivity() {
                 // Have to create dataModel class ! ! !
                 val allCurrenciesDataModel = Gson().fromJson(inputStreamReader, AllCurrenciesDataModel::class.java)
                 val exchangeRate = 1/allCurrenciesDataModel.conversion_rates[currencyString] as Float
-                historyDataMap[fullDateString] = exchangeRate
+                historyDataMap = fullDateString as String to exchangeRate
                 inputStreamReader.close()
                 inputStream.close()
             }
