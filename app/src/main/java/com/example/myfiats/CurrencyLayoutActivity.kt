@@ -39,6 +39,7 @@ class CurrencyLayoutActivity : AppCompatActivity() {
     private val baseUrlString = "https://v6.exchangerate-api.com/v6/"
     private lateinit var currencyApiKeyString: String
     private lateinit var emailString: String
+    private val historyDataMap = mutableMapOf<String, Float>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.currency_layout)
@@ -46,12 +47,14 @@ class CurrencyLayoutActivity : AppCompatActivity() {
 
         GlobalScope.launch(Dispatchers.IO) {
             for (daysAgo in 0..364) {
-                val historyDataMap = async { fetchHistoryData(daysAgo) }
-                Log.d("Historical data", historyDataMap.await().toString())
+                val historyDataPair = async { fetchHistoryData(daysAgo) }
+                historyDataMap.set(historyDataPair.await().first,historyDataPair.await().second)
+//                Log.d("Historical data", historyDataPair.await().toString())
                 if (this@CurrencyLayoutActivity.isFinishing) {
                     break
                 }
             }
+            Log.d("MAP",historyDataMap.toString())
 //            Log.d("REST API", historyDataMap.await().toString())
         }
 
@@ -97,7 +100,7 @@ class CurrencyLayoutActivity : AppCompatActivity() {
     }
 
     private suspend fun fetchHistoryData(daysAgo: Int): Pair<String,Float> {
-        lateinit var historyDataMap: Pair<String, Float>
+        lateinit var historyDataPair: Pair<String, Float>
             val calendar = Calendar.getInstance()
             val dayFormatter = SimpleDateFormat("dd")
             val monthFormatter = SimpleDateFormat("MM")
@@ -121,10 +124,10 @@ class CurrencyLayoutActivity : AppCompatActivity() {
                 // Have to create dataModel class ! ! !
                 val allCurrenciesDataModel = Gson().fromJson(inputStreamReader, AllCurrenciesDataModel::class.java)
                 val exchangeRate = 1/allCurrenciesDataModel.conversion_rates[currencyString] as Float
-                historyDataMap = fullDateString as String to exchangeRate
+                historyDataPair = fullDateString as String to exchangeRate
                 inputStreamReader.close()
                 inputStream.close()
             }
-        return historyDataMap
+        return historyDataPair
     }
 }
