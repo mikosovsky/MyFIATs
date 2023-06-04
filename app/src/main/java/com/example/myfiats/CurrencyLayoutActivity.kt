@@ -8,10 +8,13 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import java.io.InputStreamReader
@@ -20,6 +23,13 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.Calendar
+import java.util.Comparator
+
+class MyValueFormatter(private val xValsDateLabel: Array<String>): ValueFormatter() {
+    override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+        return xValsDateLabel[value.toInt()]
+    }
+}
 
 class CurrencyLayoutActivity : AppCompatActivity() {
     // Views
@@ -55,10 +65,11 @@ class CurrencyLayoutActivity : AppCompatActivity() {
                     break
                 }
             }
+            historyDataMap.toSortedMap(Comparator.reverseOrder())
+            Log.d("MAP",historyDataMap.toString())
             withContext(Dispatchers.Main) {
                 updateUI()
             }
-            Log.d("MAP",historyDataMap.toString())
 //            Log.d("REST API", historyDataMap.await().toString())
         }
 
@@ -147,19 +158,30 @@ class CurrencyLayoutActivity : AppCompatActivity() {
             val currentExchangeRateString = String.format("%.4f " + baseCurrencyString, currentExchangeRateFloat)
             currentExchangeRateTextView.text = currentExchangeRateString
         }
-        historyDataMap.toSortedMap(reverseOrder())
         var arrayList = ArrayList<Entry>()
-        val stringArray = historyDataMap.keys.toTypedArray()
+        val dateStringArray = historyDataMap.keys.toTypedArray()
+        dateStringArray.reverse()
         var x = 0f
-        for (rate in historyDataMap) {
-            val entry: Entry = Entry(x, rate.value)
+        val exchangeRateFloatArray = historyDataMap.values.toTypedArray()
+        exchangeRateFloatArray.reverse()
+        for (rate in exchangeRateFloatArray) {
+            val entry: Entry = Entry(x, rate)
             arrayList.add(entry)
             x += 1
         }
         val setComp = LineDataSet(arrayList, "Exchange rate")
         setComp.axisDependency = YAxis.AxisDependency.LEFT
+        setComp.setDrawCircles(false)
         val chartData = LineData(setComp)
         lineChart.data = chartData
+        val xAxis = lineChart.xAxis
+        xAxis.granularity = 30f
+        val valueFormatter = MyValueFormatter(dateStringArray)
+        xAxis.valueFormatter = valueFormatter
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        lineChart.xAxis.setDrawGridLines(false)
+        lineChart.description.isEnabled = false
+        lineChart.legend.isEnabled = false
         lineChart.invalidate()
 
 
