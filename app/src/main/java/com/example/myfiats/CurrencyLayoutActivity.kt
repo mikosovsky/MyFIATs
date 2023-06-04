@@ -9,10 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.github.mikephil.charting.charts.LineChart
 import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
@@ -53,6 +50,9 @@ class CurrencyLayoutActivity : AppCompatActivity() {
                 if (this@CurrencyLayoutActivity.isFinishing) {
                     break
                 }
+            }
+            withContext(Dispatchers.Main) {
+                updateUI()
             }
             Log.d("MAP",historyDataMap.toString())
 //            Log.d("REST API", historyDataMap.await().toString())
@@ -129,5 +129,19 @@ class CurrencyLayoutActivity : AppCompatActivity() {
                 inputStream.close()
             }
         return historyDataPair
+    }
+
+    private fun updateUI() {
+        val today = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("dd-MM-yyyy")
+        val date = formatter.format(today)
+        val currentExchangeRateFloat = historyDataMap[date] as Float
+        if ( currentExchangeRateFloat > 0.01) {
+            val currentExchangeRateString = String.format("%.2f " + baseCurrencyString, currentExchangeRateFloat)
+            currentExchangeRateTextView.text = currentExchangeRateString
+        } else {
+            val currentExchangeRateString = String.format("%.4f " + baseCurrencyString, currentExchangeRateFloat)
+            currentExchangeRateTextView.text = currentExchangeRateString
+        }
     }
 }
