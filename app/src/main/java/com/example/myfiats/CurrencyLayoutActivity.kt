@@ -25,13 +25,7 @@ import java.time.LocalDateTime
 import java.util.Calendar
 import java.util.Comparator
 
-class MyValueFormatter(private val xValsDateLabel: Array<String>): ValueFormatter() {
-    override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-        var returnString = xValsDateLabel[value.toInt()].replace("-",".")
-        returnString = returnString.removeRange(5,10)
-        return returnString
-    }
-}
+
 
 class CurrencyLayoutActivity : AppCompatActivity() {
     // Views
@@ -42,7 +36,6 @@ class CurrencyLayoutActivity : AppCompatActivity() {
     private lateinit var yearButton: Button
     private lateinit var monthButton: Button
     private lateinit var weekButton: Button
-    private lateinit var dayButton: Button
     private lateinit var currentExchangeRateTextView: TextView
     private lateinit var loggedLayoutActivityIntent: Intent
     // Data
@@ -94,7 +87,6 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         yearButton = findViewById(R.id.yearButton)
         monthButton = findViewById(R.id.monthButton)
         weekButton = findViewById(R.id.weekButton)
-        dayButton = findViewById(R.id.dayButton)
         currentExchangeRateTextView = findViewById(R.id.currentExchangeRateTextView)
         loggedLayoutActivityIntent = Intent(this@CurrencyLayoutActivity, LoggedLayoutActivity::class.java)
         currencyTextView.text = currencyString

@@ -69,7 +69,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:weightSum="11"
+                android:weightSum="8"
         >
             <Button
                     android:layout_width="0dp"
@@ -77,8 +77,8 @@
                     android:layout_weight="2"
                     android:id="@+id/yearButton"
                     android:background="@drawable/rounded_corner_view"
-                    app:backgroundTint="@color/currencyLayoutSecondColor"
-                    android:textColor="@color/blackTintColor"
+                    app:backgroundTint="@color/chosenChartColor"
+                    android:textColor="@color/whiteTintColor"
                     android:textAllCaps="false"
                     android:text="year"
                     android:textSize="10dp"
@@ -115,22 +115,6 @@
                     app:backgroundTint="@color/currencyLayoutSecondColor"
                     android:textAllCaps="false"
                     android:text="week"
-                    android:textSize="10dp"
-            />
-            <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-            />
-            <Button
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:id="@+id/dayButton"
-                    android:background="@drawable/rounded_corner_view"
-                    app:backgroundTint="@color/chosenChartColor"
-                    android:textAllCaps="false"
-                    android:text="day"
                     android:textSize="10dp"
             />
         </LinearLayout>
