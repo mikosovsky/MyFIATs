@@ -8,6 +8,10 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import java.io.InputStreamReader
@@ -143,5 +147,21 @@ class CurrencyLayoutActivity : AppCompatActivity() {
             val currentExchangeRateString = String.format("%.4f " + baseCurrencyString, currentExchangeRateFloat)
             currentExchangeRateTextView.text = currentExchangeRateString
         }
+        historyDataMap.toSortedMap(reverseOrder())
+        var arrayList = ArrayList<Entry>()
+        val stringArray = historyDataMap.keys.toTypedArray()
+        var x = 0f
+        for (rate in historyDataMap) {
+            val entry: Entry = Entry(x, rate.value)
+            arrayList.add(entry)
+            x += 1
+        }
+        val setComp = LineDataSet(arrayList, "Exchange rate")
+        setComp.axisDependency = YAxis.AxisDependency.LEFT
+        val chartData = LineData(setComp)
+        lineChart.data = chartData
+        lineChart.invalidate()
+
+
     }
 }
