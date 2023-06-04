@@ -27,7 +27,9 @@ import java.util.Comparator
 
 class MyValueFormatter(private val xValsDateLabel: Array<String>): ValueFormatter() {
     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-        return xValsDateLabel[value.toInt()]
+        var returnString = xValsDateLabel[value.toInt()].replace("-",".")
+        returnString = returnString.removeRange(5,10)
+        return returnString
     }
 }
 
@@ -57,7 +59,7 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         setUp()
 
         GlobalScope.launch(Dispatchers.IO) {
-            for (daysAgo in 0..364) {
+            for (daysAgo in 364 downTo 0) {
                 val historyDataPair = async { fetchHistoryData(daysAgo) }
                 historyDataMap.set(historyDataPair.await().first,historyDataPair.await().second)
 //                Log.d("Historical data", historyDataPair.await().toString())
@@ -142,6 +144,11 @@ class CurrencyLayoutActivity : AppCompatActivity() {
                 historyDataPair = fullDateString as String to exchangeRate
                 inputStreamReader.close()
                 inputStream.close()
+            } else {
+                val calendar2 = Calendar.getInstance()
+                calendar2.add(Calendar.DATE,-(daysAgo+1))
+                val fullDateDayAgoString = fullDateFormatter.format(calendar2.time)
+                historyDataPair = fullDateString as String to historyDataMap[fullDateDayAgoString] as Float
             }
         return historyDataPair
     }
@@ -160,10 +167,8 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         }
         var arrayList = ArrayList<Entry>()
         val dateStringArray = historyDataMap.keys.toTypedArray()
-        dateStringArray.reverse()
         var x = 0f
         val exchangeRateFloatArray = historyDataMap.values.toTypedArray()
-        exchangeRateFloatArray.reverse()
         for (rate in exchangeRateFloatArray) {
             val entry: Entry = Entry(x, rate)
             arrayList.add(entry)
