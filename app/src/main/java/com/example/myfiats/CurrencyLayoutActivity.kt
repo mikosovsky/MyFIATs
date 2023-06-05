@@ -17,6 +17,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
@@ -44,6 +45,7 @@ class CurrencyLayoutActivity : AppCompatActivity() {
     private lateinit var loggedLayoutActivityIntent: Intent
     // Firestore
     private lateinit var database: FirebaseFirestore
+    private var isFavourite = false
     // Data
     private var bundle: Bundle? = null
     private lateinit var currencyString: String
@@ -58,6 +60,9 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         setUp()
 
         GlobalScope.launch(Dispatchers.IO) {
+
+
+
             for (daysAgo in 364 downTo 0) {
                 val historyDataPair = async { fetchHistoryData(daysAgo) }
                 historyDataMap.set(historyDataPair.await().first,historyDataPair.await().second)
@@ -80,9 +85,9 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         supportActionBar?.hide()
         getDataFromPreviousView()
         setUpViews()
-        goBackImageButtonOnClick()
         currencyApiKeyString = getString(R.string.currencyApiKey)
         database = Firebase.firestore
+        isCurrencyFavourite()
     }
 
     private fun setUpViews(){
@@ -103,6 +108,8 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         yearButtonOnClick()
         monthButtonOnClick()
         weekButtonOnClick()
+        starImageButtonOnClick()
+        goBackImageButtonOnClick()
     }
 
     private fun getDataFromPreviousView() {
@@ -165,15 +172,17 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         val today = Calendar.getInstance().time
         val formatter = SimpleDateFormat("dd-MM-yyyy")
         val date = formatter.format(today)
-        val currentExchangeRateFloat = historyDataMap[date] as Float
-        if ( currentExchangeRateFloat > 0.01) {
-            val currentExchangeRateString = String.format("%.2f " + baseCurrencyString, currentExchangeRateFloat)
-            currentExchangeRateTextView.text = currentExchangeRateString
-        } else {
-            val currentExchangeRateString = String.format("%.4f " + baseCurrencyString, currentExchangeRateFloat)
-            currentExchangeRateTextView.text = currentExchangeRateString
+        if (historyDataMap[date] != null) {
+            val currentExchangeRateFloat = historyDataMap[date] as Float
+            if (currentExchangeRateFloat > 0.01) {
+                val currentExchangeRateString = String.format("%.2f " + baseCurrencyString, currentExchangeRateFloat)
+                currentExchangeRateTextView.text = currentExchangeRateString
+            } else {
+                val currentExchangeRateString = String.format("%.4f " + baseCurrencyString, currentExchangeRateFloat)
+                currentExchangeRateTextView.text = currentExchangeRateString
+            }
+            setDataOnChart(364)
         }
-        setDataOnChart(364)
     }
 
     private fun setDataOnChart(daysAgo: Int) {
@@ -204,8 +213,6 @@ class CurrencyLayoutActivity : AppCompatActivity() {
     }
 
     private fun setButtonActive(activeButton: Button) {
-        val unactiveColor = getColor(R.color.currencyLayoutSecondColor)
-        val activeColor = getColor(R.color.chosenChartColor)
         val blackTintColor = getColor(R.color.blackTintColor)
         val whiteTintColor = getColor(R.color.whiteTintColor)
         yearButton.setTextColor(blackTintColor)
@@ -248,7 +255,28 @@ class CurrencyLayoutActivity : AppCompatActivity() {
 
     private fun starImageButtonOnClick() {
         starImageButton.setOnClickListener {
+            isFavourite = !isFavourite
+            val data = hashMapOf(currencyString to isFavourite)
+            database.collection("favCurrencies").document(emailString)
+                .set(data, SetOptions.merge())
+            if (isFavourite) {
+                starImageButton.setImageResource(R.drawable.fill_star_icon)
+            } else {
+                starImageButton.setImageResource(R.drawable.empty_star_icon)
+            }
+        }
+    }
 
+    private fun isCurrencyFavourite() {
+        val docRef = database.collection("favCurrencies").document(emailString)
+        docRef.get().addOnSuccessListener { document ->
+            val currencies = document.data
+            if (currencies != null) {
+                if (currencies[currencyString] == true) {
+                    isFavourite = true
+                    starImageButton.setImageResource(R.drawable.fill_star_icon)
+                }
+            }
         }
     }
 }
