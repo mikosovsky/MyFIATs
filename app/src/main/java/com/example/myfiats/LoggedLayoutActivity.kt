@@ -319,7 +319,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
         magnifierImageButton.setOnClickListener {
             restartCurrenciesBoolean = true
             GlobalScope.launch(Dispatchers.IO) {
-                delay(200)
+                delay(500)
                 currenciesLinearLayout.removeAllViewsInLayout()
                 getDataFromFirestore()
             }
