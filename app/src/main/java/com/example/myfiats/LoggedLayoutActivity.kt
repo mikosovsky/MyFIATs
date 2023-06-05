@@ -42,30 +42,30 @@ class LoggedLayoutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.logged_layout)
         setUp()
-        GlobalScope.launch(Dispatchers.IO) {
-
-            val dataModel = async { fetchCurrenciesData() }
-            for (currency in dataModel.await().conversion_rates) {
-                if (currency.key != baseCurrency) {
-                    val currencyDataModel = async { fetchCurrencyDetails(currency.key) }
-                    if (currencyDataModel.await() == null) {
-                        withContext(Dispatchers.Main) {
-                            updateUI(currency)
-                        }
-                    } else {
-                        val toSendCurrencyDataModel = currencyDataModel.await() as CurrencyDataModel
-                        val readyDataToUseModel =
-                            async { downloadImageByteArrayAndChangeObjectOfData(toSendCurrencyDataModel) }
-
-                        withContext(Dispatchers.Main) {
-                            updateUI(readyDataToUseModel.await())
-
-                        }
-                    }
-                }
-            }
-            Log.d("REST API", "END OF DOWNLOADING DATA")
-        }
+//        GlobalScope.launch(Dispatchers.IO) {
+//
+//            val dataModel = async { fetchCurrenciesData() }
+//            for (currency in dataModel.await().conversion_rates) {
+//                if (currency.key != baseCurrency) {
+//                    val currencyDataModel = async { fetchCurrencyDetails(currency.key) }
+//                    if (currencyDataModel.await() == null) {
+//                        withContext(Dispatchers.Main) {
+//                            updateUI(currency)
+//                        }
+//                    } else {
+//                        val toSendCurrencyDataModel = currencyDataModel.await() as CurrencyDataModel
+//                        val readyDataToUseModel =
+//                            async { downloadImageByteArrayAndChangeObjectOfData(toSendCurrencyDataModel) }
+//
+//                        withContext(Dispatchers.Main) {
+//                            updateUI(readyDataToUseModel.await())
+//
+//                        }
+//                    }
+//                }
+//            }
+//            Log.d("REST API", "END OF DOWNLOADING DATA")
+//        }
     }
 
     // Function is setting up all things
@@ -102,20 +102,55 @@ class LoggedLayoutActivity : AppCompatActivity() {
                     Log.d("FIRESTORE.FAV", "DocumentSnapshot data: ${favCurrencies}")
                     if (favCurrencies.keys.size > 0) {
                         var anyCurrencyIsTrue = false
+                        GlobalScope.launch(Dispatchers.IO) {
                         for (currency in favCurrencies) {
                             if (currency.value == true && anyCurrencyIsTrue == false) {
                                 anyCurrencyIsTrue = true
                                 val favouriteTextView = TextView(baseContext)
                                 favouriteTextView.textSize = 30f
                                 favouriteTextView.text = "Favourites"
-                                currenciesLinearLayout.addView(favouriteTextView)
+                                withContext(Dispatchers.Main) {
+                                    currenciesLinearLayout.addView(favouriteTextView)
+                                }
                             }
-                        }
+                            if (currency.value == true) {
+
+                                    val currencyDataModel = async { fetchCurrencyDetails(currency.key) }
+                                    if (currencyDataModel.await() != null) {
+                                        val readyCurrencyDataModel = currencyDataModel.await() as CurrencyDataModel
+                                        val dataToShow = async{downloadImageByteArrayAndChangeObjectOfData(readyCurrencyDataModel)}
+                                        withContext(Dispatchers.Main) {
+                                            updateUI(dataToShow.await())
+                                        }
+                                    }
+                                }
+                            }
+
                         val allCurrenciesTextView = TextView(baseContext)
                         allCurrenciesTextView.textSize = 30f
                         allCurrenciesTextView.text = "All currencies"
                         currenciesLinearLayout.addView(allCurrenciesTextView)
-                    }
+                            val dataModel = async { fetchCurrenciesData() }
+                            for (currency in dataModel.await().conversion_rates) {
+                                if (currency.key != baseCurrency) {
+                                    val currencyDataModel = async { fetchCurrencyDetails(currency.key) }
+                                    if (currencyDataModel.await() == null) {
+                                        withContext(Dispatchers.Main) {
+                                            updateUI(currency)
+                                        }
+                                    } else {
+                                        val toSendCurrencyDataModel = currencyDataModel.await() as CurrencyDataModel
+                                        val readyDataToUseModel =
+                                            async { downloadImageByteArrayAndChangeObjectOfData(toSendCurrencyDataModel) }
+
+                                        withContext(Dispatchers.Main) {
+                                            updateUI(readyDataToUseModel.await())
+
+                                        }
+                                    }
+                                }
+                            }
+                    }}
                 } else {
                     Log.d("FIRESTORE.FAV", "No such document")
                 }
