@@ -138,7 +138,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/currentExchangeRateTextView"
-                android:text="5.17 PLN"
+                android:text="0.00 XXX"
                 android:textAlignment="textEnd"
                 android:textSize="50sp"
                 android:textColor="@color/blackTintColor"
