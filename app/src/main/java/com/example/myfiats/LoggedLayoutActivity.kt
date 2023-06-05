@@ -8,9 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -25,7 +23,8 @@ class LoggedLayoutActivity : AppCompatActivity() {
     // Views
     private lateinit var currenciesLinearLayout: LinearLayout
     private lateinit var currencyLayoutActivityIntent: Intent
-
+    private lateinit var magnifierImageButton: ImageButton
+    private var restartCurrenciesBoolean = false
     // To get data from previous view
     private var bundle: Bundle? = null
     private lateinit var emailString: String
@@ -76,6 +75,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
         getDataFromPreviousView()
         getDataFromFirestore()
         setUpViews()
+        magnifierImageButtonOnClick()
     }
 
     // Function to get data from previous view (email address)
@@ -104,6 +104,9 @@ class LoggedLayoutActivity : AppCompatActivity() {
                         var anyCurrencyIsTrue = false
                         GlobalScope.launch(Dispatchers.IO) {
                             for (currency in favCurrencies) {
+                                if (restartCurrenciesBoolean) {
+                                    break
+                                }
                                 if (currency.value == true && anyCurrencyIsTrue == false) {
                                     anyCurrencyIsTrue = true
                                     val favouriteTextView = TextView(baseContext)
@@ -134,6 +137,10 @@ class LoggedLayoutActivity : AppCompatActivity() {
                             }
                             val dataModel = async { fetchCurrenciesData() }
                             for (currency in dataModel.await().conversion_rates) {
+                                if (restartCurrenciesBoolean) {
+                                    restartCurrenciesBoolean = false
+                                    break
+                                }
                                 if (currency.key != baseCurrency) {
                                     val currencyDataModel = async { fetchCurrencyDetails(currency.key) }
                                     if (currencyDataModel.await() == null) {
@@ -167,6 +174,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
     private fun setUpViews() {
         currenciesLinearLayout = findViewById(R.id.currenciesLinearLayout)
         currencyLayoutActivityIntent = Intent(this@LoggedLayoutActivity, CurrencyLayoutActivity::class.java)
+        magnifierImageButton = findViewById(R.id.magnifierImageButton)
     }
 
     // Function is responsible for get data from Rest API
@@ -305,5 +313,16 @@ class LoggedLayoutActivity : AppCompatActivity() {
         val shortNameCurrency = currencyDataModel.target_code
         val exchangeRate = currencyDataModel.conversion_rate
         return ReadyDataToUseModel(fullNameCurrency, shortNameCurrency, exchangeRate, bitmap)
+    }
+
+    private fun magnifierImageButtonOnClick() {
+        magnifierImageButton.setOnClickListener {
+            restartCurrenciesBoolean = true
+            GlobalScope.launch(Dispatchers.IO) {
+                delay(200)
+                currenciesLinearLayout.removeAllViewsInLayout()
+                getDataFromFirestore()
+            }
+        }
     }
 }
