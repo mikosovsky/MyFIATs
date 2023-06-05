@@ -20,9 +20,6 @@ import java.util.*
 
 class RegisterLayoutActivity : AppCompatActivity() {
 
-    //Intents
-    private lateinit var loginLayoutActivityIntent: Intent
-
     //Buttons
     private lateinit var goBackButton: Button
     private lateinit var registerButton: Button
@@ -65,8 +62,6 @@ class RegisterLayoutActivity : AppCompatActivity() {
 
     // Function to set up all views in register_layout.xml
     private fun setUpViews() {
-        // Init of Intent
-        loginLayoutActivityIntent = Intent(this@RegisterLayoutActivity, LoginLayoutActivity::class.java)
         // Init of Buttons
         goBackButton = findViewById(R.id.goBackButton)
         registerButton = findViewById(R.id.registerButton)
@@ -89,7 +84,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
     // Functionality for goBackButton (Go back to login_layout.xml)
     private fun goBackButtonOnClick() {
         goBackButton.setOnClickListener {
-            startActivity(loginLayoutActivityIntent)
+            finish()
         }
     }
 
@@ -201,7 +196,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
                 val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
                 Log.d(firebaseFirestoreLogNameString, "DocumentSnapshot added with ID: ${documentReference.id}")
                 auth.signOut()
-                startActivity(loginLayoutActivityIntent)
+                finish()
             }
             .addOnFailureListener { e ->
                 val firebaseFirestoreLogNameString = getString(R.string.firebaseFirestoreLogName)
