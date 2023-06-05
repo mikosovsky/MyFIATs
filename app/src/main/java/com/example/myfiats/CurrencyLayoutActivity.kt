@@ -172,17 +172,20 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         var arrayList = ArrayList<Entry>()
         val dateStringArray = historyDataMap.keys.toTypedArray()
         val exchangeRateFloatArray = historyDataMap.values.toTypedArray()
-        for (i in 0..daysAgo) {
+        val startValue = exchangeRateFloatArray.size - 1 - daysAgo
+        val endValue = exchangeRateFloatArray.size - 1
+        for (i in startValue..endValue) {
             val entry: Entry = Entry(i.toFloat(), exchangeRateFloatArray[i])
             arrayList.add(entry)
         }
         val setComp = LineDataSet(arrayList, "Exchange rate")
         setComp.axisDependency = YAxis.AxisDependency.LEFT
         setComp.setDrawCircles(false)
+        setComp.setDrawValues(false)
         val chartData = LineData(setComp)
         lineChart.data = chartData
         val xAxis = lineChart.xAxis
-        xAxis.granularity = 30f
+        xAxis.granularity = 1f
         val valueFormatter = MyValueFormatter(dateStringArray)
         xAxis.valueFormatter = valueFormatter
         xAxis.position = XAxis.XAxisPosition.BOTTOM
