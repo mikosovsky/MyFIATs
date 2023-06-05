@@ -104,9 +104,12 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         bundle = intent.extras
         if (bundle != null) {
             val getCurrencyString = bundle!!.getString("shortNameCurrency").toString()
+            val getEmailString = bundle!!.getString("email").toString()
+            emailString = getEmailString
             currencyString = getCurrencyString
         } else {
             currencyString = "PLN"
+            emailString = "xxx@xxx.pl"
         }
     }
 

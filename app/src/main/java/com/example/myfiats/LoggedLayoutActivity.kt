@@ -21,6 +21,9 @@ class LoggedLayoutActivity : AppCompatActivity() {
     // Views
     private lateinit var currenciesLinearLayout: LinearLayout
     private lateinit var currencyLayoutActivityIntent: Intent
+    // To get data from previous view
+    private var bundle: Bundle? = null
+    private lateinit var emailString: String
     // Rest API data
     private lateinit var currencyApiKeyString: String
     private val baseUrlString = "https://v6.exchangerate-api.com/v6/"
@@ -58,7 +61,19 @@ class LoggedLayoutActivity : AppCompatActivity() {
     private fun setUp() {
         supportActionBar?.hide()
         currencyApiKeyString = getString(R.string.currencyApiKey)
+        getDataFromPreviousView()
         setUpViews()
+    }
+
+    // Function to get data from previous view (email address)
+    private fun getDataFromPreviousView() {
+        bundle = intent.extras
+        if (bundle != null) {
+            val getEmailString = bundle!!.getString("email").toString()
+            emailString = getEmailString
+        } else {
+            emailString = "xxx@xxx.pl"
+        }
     }
 
     // Function is responsible for setting up all views
@@ -187,6 +202,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
             val shortNameCurrencyTextView = currencyInfoLayout.findViewById<TextView>(R.id.shortNameCurrencyTextView)
             val shortNameCurrencyString = shortNameCurrencyTextView.text.toString()
             currencyLayoutActivityIntent.putExtra("shortNameCurrency", shortNameCurrencyString)
+            currencyLayoutActivityIntent.putExtra("email", emailString)
             startActivity(currencyLayoutActivityIntent)
         }
     }
