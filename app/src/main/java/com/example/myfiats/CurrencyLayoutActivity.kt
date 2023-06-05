@@ -216,22 +216,29 @@ class CurrencyLayoutActivity : AppCompatActivity() {
 
     private fun yearButtonOnClick() {
         yearButton.setOnClickListener {
-            setButtonActive(yearButton)
-            setDataOnChart(364)
+            if (historyDataMap.keys.size >= 365) {
+                setButtonActive(yearButton)
+                setDataOnChart(364)
+            }
         }
     }
 
     private fun monthButtonOnClick() {
         monthButton.setOnClickListener {
-            setButtonActive(monthButton)
-            setDataOnChart(29)
+            if (historyDataMap.keys.size >= 365) {
+                setButtonActive(monthButton)
+                setDataOnChart(29)
+            }
         }
     }
 
     private fun weekButtonOnClick() {
         weekButton.setOnClickListener {
-            setButtonActive(weekButton)
-            setDataOnChart(6)
+            if (historyDataMap.keys.size >= 365) {
+                setButtonActive(weekButton)
+                setDataOnChart(6)
+            }
         }
     }
+
 }
