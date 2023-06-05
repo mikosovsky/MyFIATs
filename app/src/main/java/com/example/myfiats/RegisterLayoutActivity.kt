@@ -212,7 +212,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
 
     private fun createTemplateForFavouriteCurrencies(emailString: String) {
         val data = hashMapOf(
-            "GBP" to true
+            "GBP" to false
         )
         database.collection("favCurrencies").document(emailString)
             .set(data)

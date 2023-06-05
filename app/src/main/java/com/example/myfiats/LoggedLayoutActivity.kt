@@ -11,19 +11,28 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.HashMap
 
 class LoggedLayoutActivity : AppCompatActivity() {
     // Views
     private lateinit var currenciesLinearLayout: LinearLayout
     private lateinit var currencyLayoutActivityIntent: Intent
+
     // To get data from previous view
     private var bundle: Bundle? = null
     private lateinit var emailString: String
+
+    // Firestore
+    private lateinit var database: FirebaseFirestore
+
     // Rest API data
     private lateinit var currencyApiKeyString: String
     private val baseUrlString = "https://v6.exchangerate-api.com/v6/"
@@ -34,6 +43,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
         setContentView(R.layout.logged_layout)
         setUp()
         GlobalScope.launch(Dispatchers.IO) {
+
             val dataModel = async { fetchCurrenciesData() }
             for (currency in dataModel.await().conversion_rates) {
                 if (currency.key != baseCurrency) {
@@ -44,7 +54,8 @@ class LoggedLayoutActivity : AppCompatActivity() {
                         }
                     } else {
                         val toSendCurrencyDataModel = currencyDataModel.await() as CurrencyDataModel
-                        val readyDataToUseModel = async { downloadImageByteArrayAndChangeObjectOfData(toSendCurrencyDataModel) }
+                        val readyDataToUseModel =
+                            async { downloadImageByteArrayAndChangeObjectOfData(toSendCurrencyDataModel) }
 
                         withContext(Dispatchers.Main) {
                             updateUI(readyDataToUseModel.await())
@@ -61,7 +72,9 @@ class LoggedLayoutActivity : AppCompatActivity() {
     private fun setUp() {
         supportActionBar?.hide()
         currencyApiKeyString = getString(R.string.currencyApiKey)
+        database = Firebase.firestore
         getDataFromPreviousView()
+        getDataFromFirestore()
         setUpViews()
     }
 
@@ -74,6 +87,42 @@ class LoggedLayoutActivity : AppCompatActivity() {
         } else {
             emailString = "xxx@xxx.pl"
         }
+    }
+
+    private fun getDataFromFirestore() {
+        var favCurrencies = mutableMapOf<String, Any>()
+        val docRef = database.collection("favCurrencies").document(emailString)
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    val getFavCurrencies = document.data
+                    if (getFavCurrencies != null) {
+                        favCurrencies = getFavCurrencies as MutableMap<String, Any>
+                    }
+                    Log.d("FIRESTORE.FAV", "DocumentSnapshot data: ${favCurrencies}")
+                    if (favCurrencies.keys.size > 0) {
+                        var anyCurrencyIsTrue = false
+                        for (currency in favCurrencies) {
+                            if (currency.value == true && anyCurrencyIsTrue == false) {
+                                anyCurrencyIsTrue = true
+                                val favouriteTextView = TextView(baseContext)
+                                favouriteTextView.textSize = 30f
+                                favouriteTextView.text = "Favourites"
+                                currenciesLinearLayout.addView(favouriteTextView)
+                            }
+                        }
+                        val allCurrenciesTextView = TextView(baseContext)
+                        allCurrenciesTextView.textSize = 30f
+                        allCurrenciesTextView.text = "All currencies"
+                        currenciesLinearLayout.addView(allCurrenciesTextView)
+                    }
+                } else {
+                    Log.d("FIRESTORE.FAV", "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("FIRESTORE.FAV", "get failed with ", exception)
+            }
     }
 
     // Function is responsible for setting up all views
@@ -112,23 +161,6 @@ class LoggedLayoutActivity : AppCompatActivity() {
 
     }
 
-    private fun updateUI(currencyDataModel: CurrencyDataModel) {
-
-        val exchangeRateFloat = 1 / currencyDataModel.conversion_rate
-        var exchangeRateString = ""
-        if (exchangeRateFloat > 0.01) {
-            exchangeRateString = String.format("%.2f " + baseCurrency, exchangeRateFloat)
-        } else {
-            exchangeRateString = String.format("%.4f " + baseCurrency, exchangeRateFloat)
-        }
-        createCurrencyInfoLayout(
-            currencyDataModel.target_data.currency_name,
-            currencyDataModel.target_code,
-            exchangeRateString
-        )
-
-    }
-
     private fun updateUI(readyDataToUseModel: ReadyDataToUseModel) {
 
         val exchangeRateFloat = 1 / readyDataToUseModel.exchangeRate
@@ -140,12 +172,12 @@ class LoggedLayoutActivity : AppCompatActivity() {
         }
         if (readyDataToUseModel.image != null) {
             val image = readyDataToUseModel.image as Bitmap
-        createCurrencyInfoLayout(
-            readyDataToUseModel.fullNameCurrency,
-            readyDataToUseModel.shortNameCurrency,
-            exchangeRateString,
-            image
-        )
+            createCurrencyInfoLayout(
+                readyDataToUseModel.fullNameCurrency,
+                readyDataToUseModel.shortNameCurrency,
+                exchangeRateString,
+                image
+            )
         } else {
             createCurrencyInfoLayout(
                 readyDataToUseModel.fullNameCurrency,
