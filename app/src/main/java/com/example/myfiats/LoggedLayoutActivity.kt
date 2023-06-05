@@ -103,33 +103,35 @@ class LoggedLayoutActivity : AppCompatActivity() {
                     if (favCurrencies.keys.size > 0) {
                         var anyCurrencyIsTrue = false
                         GlobalScope.launch(Dispatchers.IO) {
-                        for (currency in favCurrencies) {
-                            if (currency.value == true && anyCurrencyIsTrue == false) {
-                                anyCurrencyIsTrue = true
-                                val favouriteTextView = TextView(baseContext)
-                                favouriteTextView.textSize = 30f
-                                favouriteTextView.text = "Favourites"
-                                withContext(Dispatchers.Main) {
-                                    currenciesLinearLayout.addView(favouriteTextView)
+                            for (currency in favCurrencies) {
+                                if (currency.value == true && anyCurrencyIsTrue == false) {
+                                    anyCurrencyIsTrue = true
+                                    val favouriteTextView = TextView(baseContext)
+                                    favouriteTextView.textSize = 30f
+                                    favouriteTextView.text = "Favourites"
+                                    withContext(Dispatchers.Main) {
+                                        currenciesLinearLayout.addView(favouriteTextView)
+                                    }
                                 }
-                            }
-                            if (currency.value == true) {
+                                if (currency.value == true) {
 
                                     val currencyDataModel = async { fetchCurrencyDetails(currency.key) }
                                     if (currencyDataModel.await() != null) {
                                         val readyCurrencyDataModel = currencyDataModel.await() as CurrencyDataModel
-                                        val dataToShow = async{downloadImageByteArrayAndChangeObjectOfData(readyCurrencyDataModel)}
+                                        val dataToShow =
+                                            async { downloadImageByteArrayAndChangeObjectOfData(readyCurrencyDataModel) }
                                         withContext(Dispatchers.Main) {
                                             updateUI(dataToShow.await())
                                         }
                                     }
                                 }
                             }
-
-                        val allCurrenciesTextView = TextView(baseContext)
-                        allCurrenciesTextView.textSize = 30f
-                        allCurrenciesTextView.text = "All currencies"
-                        currenciesLinearLayout.addView(allCurrenciesTextView)
+                            withContext(Dispatchers.Main) {
+                                val allCurrenciesTextView = TextView(baseContext)
+                                allCurrenciesTextView.textSize = 30f
+                                allCurrenciesTextView.text = "All currencies"
+                                currenciesLinearLayout.addView(allCurrenciesTextView)
+                            }
                             val dataModel = async { fetchCurrenciesData() }
                             for (currency in dataModel.await().conversion_rates) {
                                 if (currency.key != baseCurrency) {
@@ -150,7 +152,8 @@ class LoggedLayoutActivity : AppCompatActivity() {
                                     }
                                 }
                             }
-                    }}
+                        }
+                    }
                 } else {
                     Log.d("FIRESTORE.FAV", "No such document")
                 }
