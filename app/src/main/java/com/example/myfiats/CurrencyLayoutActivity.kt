@@ -1,6 +1,7 @@
 package com.example.myfiats
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -90,6 +91,13 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         currentExchangeRateTextView = findViewById(R.id.currentExchangeRateTextView)
         loggedLayoutActivityIntent = Intent(this@CurrencyLayoutActivity, LoggedLayoutActivity::class.java)
         currencyTextView.text = currencyString
+        buttonsOnClick()
+    }
+
+    private fun buttonsOnClick() {
+        yearButtonOnClick()
+        monthButtonOnClick()
+        weekButtonOnClick()
     }
 
     private fun getDataFromPreviousView() {
@@ -157,14 +165,16 @@ class CurrencyLayoutActivity : AppCompatActivity() {
             val currentExchangeRateString = String.format("%.4f " + baseCurrencyString, currentExchangeRateFloat)
             currentExchangeRateTextView.text = currentExchangeRateString
         }
+        setDataOnChart(364)
+    }
+
+    private fun setDataOnChart(daysAgo: Int) {
         var arrayList = ArrayList<Entry>()
         val dateStringArray = historyDataMap.keys.toTypedArray()
-        var x = 0f
         val exchangeRateFloatArray = historyDataMap.values.toTypedArray()
-        for (rate in exchangeRateFloatArray) {
-            val entry: Entry = Entry(x, rate)
+        for (i in 0..daysAgo) {
+            val entry: Entry = Entry(i.toFloat(), exchangeRateFloatArray[i])
             arrayList.add(entry)
-            x += 1
         }
         val setComp = LineDataSet(arrayList, "Exchange rate")
         setComp.axisDependency = YAxis.AxisDependency.LEFT
@@ -180,7 +190,42 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         lineChart.description.isEnabled = false
         lineChart.legend.isEnabled = false
         lineChart.invalidate()
+    }
 
+    private fun setButtonActive(activeButton: Button) {
+        val unactiveColor = getColor(R.color.currencyLayoutSecondColor)
+        val activeColor = getColor(R.color.chosenChartColor)
+        val blackTintColor = getColor(R.color.blackTintColor)
+        val whiteTintColor = getColor(R.color.whiteTintColor)
+        yearButton.setTextColor(blackTintColor)
+        monthButton.setTextColor(blackTintColor)
+        weekButton.setTextColor(blackTintColor)
+        yearButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.currencyLayoutSecondColor))
+        monthButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.currencyLayoutSecondColor))
+        weekButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.currencyLayoutSecondColor))
+        activeButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.chosenChartColor))
+        activeButton.setTextColor(whiteTintColor)
 
+    }
+
+    private fun yearButtonOnClick() {
+        yearButton.setOnClickListener {
+            setButtonActive(yearButton)
+            setDataOnChart(364)
+        }
+    }
+
+    private fun monthButtonOnClick() {
+        monthButton.setOnClickListener {
+            setButtonActive(monthButton)
+            setDataOnChart(29)
+        }
+    }
+
+    private fun weekButtonOnClick() {
+        weekButton.setOnClickListener {
+            setButtonActive(weekButton)
+            setDataOnChart(6)
+        }
     }
 }
