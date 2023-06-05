@@ -16,6 +16,9 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import java.io.InputStreamReader
@@ -39,6 +42,8 @@ class CurrencyLayoutActivity : AppCompatActivity() {
     private lateinit var weekButton: Button
     private lateinit var currentExchangeRateTextView: TextView
     private lateinit var loggedLayoutActivityIntent: Intent
+    // Firestore
+    private lateinit var database: FirebaseFirestore
     // Data
     private var bundle: Bundle? = null
     private lateinit var currencyString: String
@@ -77,7 +82,7 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         setUpViews()
         goBackImageButtonOnClick()
         currencyApiKeyString = getString(R.string.currencyApiKey)
-
+        database = Firebase.firestore
     }
 
     private fun setUpViews(){
@@ -241,4 +246,9 @@ class CurrencyLayoutActivity : AppCompatActivity() {
         }
     }
 
+    private fun starImageButtonOnClick() {
+        starImageButton.setOnClickListener {
+
+        }
+    }
 }

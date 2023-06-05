@@ -174,6 +174,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
                     val nameString = nameEditText.text.toString()
                     val surnameString = surnameEditText.text.toString()
                    sendPersonalDataToDatabaseAndGoBackToLoginLayout(emailString, nameString, surnameString, birthdateString)
+                    createTemplateForFavouriteCurrencies(emailString)
 
                 } else {
                     val firebaseAuthLogNameString = getString(R.string.firebaseAuthLogName)
@@ -187,7 +188,7 @@ class RegisterLayoutActivity : AppCompatActivity() {
             }
     }
     // Function to send important information like name, surname, birthdate to database
-    fun sendPersonalDataToDatabaseAndGoBackToLoginLayout(emailString: String, nameString: String, surnameString: String, birthdateString: String){
+    private fun sendPersonalDataToDatabaseAndGoBackToLoginLayout(emailString: String, nameString: String, surnameString: String, birthdateString: String){
         val user = hashMapOf(
             "email" to emailString,
             "name" to nameString,
@@ -208,6 +209,17 @@ class RegisterLayoutActivity : AppCompatActivity() {
                 // Later here should be code to delete account if personal data wouldn't be sent to database and show warning
             }
     }
+
+    private fun createTemplateForFavouriteCurrencies(emailString: String) {
+        val data = hashMapOf(
+            "GBP" to true
+        )
+        database.collection("favCurrencies").document(emailString)
+            .set(data)
+            .addOnSuccessListener { Log.d("FIRESTORE.FAV", "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w("FIRESTORE.FAV", "Error writing document", e) }
+    }
+
     // Function is responsible for handling underage birthdate in birthdateEditText
     private fun handleUnderageBirthdate(birthdateDate: Date, minimumBirthdateDate: Date) {
         if (birthdateDate >= minimumBirthdateDate) {
