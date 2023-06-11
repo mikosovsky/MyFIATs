@@ -7,5 +7,10 @@ class CameraLayoutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.camera_layout)
+        setUp()
+    }
+
+    private fun setUp(){
+        supportActionBar?.hide()
     }
 }
