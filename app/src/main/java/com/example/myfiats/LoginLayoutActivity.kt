@@ -16,10 +16,12 @@ class LoginLayoutActivity : AppCompatActivity() {
     //Intents
     private lateinit var registerLayoutActivityIntent: Intent
     private lateinit var loggedLayoutActivityIntent: Intent
+    private lateinit var cameraLayoutActivityIntent: Intent
 
     // Buttons
     private lateinit var registerButton: Button
     private lateinit var loginButton: Button
+    private lateinit var cameraButton: Button
 
     // EditText
     private lateinit var emailEditText: EditText
@@ -40,6 +42,13 @@ class LoginLayoutActivity : AppCompatActivity() {
         setUpViews()
         registerButtonOnClick()
         loginButtonOnClick()
+        cameraButtonOnClick()
+    }
+
+    private fun cameraButtonOnClick() {
+        cameraButton.setOnClickListener {
+            startActivity(cameraLayoutActivityIntent)
+        }
     }
 
     // Functionality for registerButton (Go to register_layout.xml)
@@ -88,9 +97,11 @@ class LoginLayoutActivity : AppCompatActivity() {
     private fun setUpViews() {
         registerLayoutActivityIntent = Intent(this@LoginLayoutActivity, RegisterLayoutActivity::class.java)
         loggedLayoutActivityIntent = Intent(this@LoginLayoutActivity, LoggedLayoutActivity::class.java)
+        cameraLayoutActivityIntent = Intent(this@LoginLayoutActivity, CameraLayoutActivity::class.java)
         registerButton = findViewById(R.id.registerButton)
         loginButton = findViewById(R.id.loginButton)
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
+        cameraButton = findViewById(R.id.cameraButton)
     }
 }
