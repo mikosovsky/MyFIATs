@@ -111,7 +111,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
                                     anyCurrencyIsTrue = true
                                     val favouriteTextView = TextView(baseContext)
                                     favouriteTextView.textSize = 30f
-                                    favouriteTextView.text = "Favourites"
+                                    favouriteTextView.text = getString(R.string.favourites)
                                     withContext(Dispatchers.Main) {
                                         currenciesLinearLayout.addView(favouriteTextView)
                                     }
@@ -132,7 +132,7 @@ class LoggedLayoutActivity : AppCompatActivity() {
                             withContext(Dispatchers.Main) {
                                 val allCurrenciesTextView = TextView(baseContext)
                                 allCurrenciesTextView.textSize = 30f
-                                allCurrenciesTextView.text = "All currencies"
+                                allCurrenciesTextView.text = getString(R.string.allCurrencies)
                                 currenciesLinearLayout.addView(allCurrenciesTextView)
                             }
                             val dataModel = async { fetchCurrenciesData() }
