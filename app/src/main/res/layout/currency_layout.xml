@@ -80,7 +80,7 @@
                     app:backgroundTint="@color/chosenChartColor"
                     android:textColor="@color/whiteTintColor"
                     android:textAllCaps="false"
-                    android:text="year"
+                    android:text="@string/year"
                     android:textSize="10dp"
             />
             <Space
@@ -97,7 +97,7 @@
                     android:background="@drawable/rounded_corner_view"
                     app:backgroundTint="@color/currencyLayoutSecondColor"
                     android:textAllCaps="false"
-                    android:text="month"
+                    android:text="@string/month"
                     android:textSize="10dp"
             />
             <Space
@@ -114,7 +114,7 @@
                     android:background="@drawable/rounded_corner_view"
                     app:backgroundTint="@color/currencyLayoutSecondColor"
                     android:textAllCaps="false"
-                    android:text="week"
+                    android:text="@string/week"
                     android:textSize="10dp"
             />
         </LinearLayout>
@@ -125,7 +125,7 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Current exchange rate:"
+                android:text="@string/currentExchangeRate"
                 android:textColor="@color/blackTintColor"
                 android:textAlignment="textEnd"
                 android:textSize="16sp"

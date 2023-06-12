@@ -17,4 +17,8 @@
     <string name="goBack">Cofnij</string>
     <string name="favourites">Ulubione</string>
     <string name="allCurrencies">Wszystkie waluty</string>
+    <string name="year">rok</string>
+    <string name="month">miesiąc</string>
+    <string name="week">tydzień</string>
+    <string name="currentExchangeRate">Aktualny kurs waluty:</string>
 </resources>
