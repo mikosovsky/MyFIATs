@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyFIATs</string>
+    <string name="birthdateUnderageError">Jesteś za młody!</string>
+    <string name="passwordNotEnoughLongError">Twoje hasło jest za krótkie!</string>
+    <string name="passwordsAreNotTheSame">Hasła nie są identyczne!</string>
+    <string name="emptyEditTextError">Wypełnij!</string>
+    <string name="password">Hasło</string>
+    <string name="login">Zaloguj</string>
+    <string name="register">Zarejestruj</string>
+    <string name="Name">Imię</string>
+    <string name="Surname">Nazwisko</string>
+    <string name="Birthdate">Urodziny</string>
+    <string name="confirmPassword">Potwierdź hasło</string>
+    <string name="fillUp">Wypełnij!</string>
+    <string name="undarage">Jesteś za młody!</string>
+    <string name="goBack">Cofnij</string>
+</resources>

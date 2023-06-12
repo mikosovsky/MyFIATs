@@ -6,4 +6,14 @@
     <string name="passwordNotEnoughLongError">Your password is too short!</string>
     <string name="passwordsAreNotTheSame">Passwords are not the same!</string>
     <string name="emptyEditTextError">"Fill up!</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="Name">Name</string>
+    <string name="Surname">Surname</string>
+    <string name="Birthdate">Birthdate</string>
+    <string name="confirmPassword">Confirm password</string>
+    <string name="fillUp">Fill up!</string>
+    <string name="undarage">You are underage!</string>
+    <string name="goBack">Go back</string>
 </resources>
